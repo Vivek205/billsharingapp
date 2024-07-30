@@ -1,9 +1,10 @@
-import { BankDetails } from "./pages/BankDetails/BankDetails";
-
 export const Routes = {
-  Root: "/",
   BankDetails: "/bank-details",
   Home: "/home",
+  ItemsReview: "/items-review",
   Login: "/login",
+  ReadingReceipt: "/reading-receipt",
+  Root: "/",
+  SharePaymentLink: "/share-payment-link",
   Signup: "/signup",
 };

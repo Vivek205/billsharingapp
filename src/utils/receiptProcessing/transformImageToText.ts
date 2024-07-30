@@ -1,15 +1,18 @@
 import axios from "axios";
 
 export const transformImageToText = async (image: string) => {
-  const model = "@cf/llava-hf/llava-1.5-7b-hf";
+  // LLM Model: "@cf/llava-hf/llava-1.5-7b-hf"
 
-  const url = import.meta.env.VITE_IMAGE_ANALYSIS_API;
+  // TODO: uncomment this when the API is ready
+  // const url = import.meta.env.VITE_IMAGE_ANALYSIS_API;
+  const url = "/api";
 
   const response = await axios.post(
     url,
     {
       image,
-      prompt: "I've got a receipt. Can you list all the items and their respective prices and quantities in json format",
+      prompt:
+        "I've got a receipt. Can you list all the items and their respective prices and quantities in json format",
       max_tokens: 512,
     },
     {

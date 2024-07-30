@@ -21,12 +21,14 @@ import {
 } from "../../utils/auth/firebase";
 
 import "./Login.css";
+import { useLocation } from "react-router";
 
 export const Login: React.FC = () => {
   const router = useIonRouter();
   // TODO: Replace with react form
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { state } = useLocation<{ path?: string }>();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -37,7 +39,12 @@ export const Login: React.FC = () => {
     }
     try {
       await signinWithPassword(email, password);
-      router.push(Routes.Home, "forward");
+      console.log("state", state);
+      if (state?.path) {
+        router.push(state.path, "root");
+      } else {
+        router.push(Routes.Home, "root");
+      }
     } catch (error: any) {
       window.alert?.(error.message);
     }
@@ -46,7 +53,12 @@ export const Login: React.FC = () => {
   const handleGoogleSignIn = async () => {
     try {
       await signinWithGoogle();
-      router.push(Routes.Home, "forward");
+      console.log("state", state);
+      if (state?.path) {
+        router.push(state.path, "root");
+      } else {
+        router.push(Routes.Home, "root");
+      }
     } catch (error: any) {
       window.alert?.(error.message);
     }

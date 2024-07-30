@@ -3,7 +3,10 @@ import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { Home } from "./pages/Home";
 import { Login } from "./pages/Login";
-import { initializeFirebase } from "./utils/auth/firebase";
+import {
+  FirebaseAuthProvider,
+  initializeFirebase,
+} from "./utils/auth/firebase";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -36,28 +39,35 @@ import "@ionic/react/css/palettes/dark.system.css";
 import "./theme/variables.css";
 import { Signup } from "./pages/Signup";
 import { Routes } from "./Routes";
+import { BankDetails } from "./pages/BankDetails";
+import { PrivateRoute } from "./components/PrivateRoute/PrivateRoute";
 
 setupIonicReact();
 initializeFirebase();
 
 const App: React.FC = () => (
   <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route exact path={Routes.Login}>
-          <Login />
-        </Route>
-        <Route exact path={Routes.Signup}>
-          <Signup />
-        </Route>
-        <Route exact path={Routes.Home}>
-          <Home />
-        </Route>
-        <Route exact path={Routes.Root}>
-          <Redirect to={Routes.Login} />
-        </Route>
-      </IonRouterOutlet>
-    </IonReactRouter>
+    <FirebaseAuthProvider>
+      <IonReactRouter>
+        <IonRouterOutlet>
+          <Route exact path={Routes.Login}>
+            <Login />
+          </Route>
+          <Route exact path={Routes.Signup}>
+            <Signup />
+          </Route>
+          <Route exact path={Routes.Home}>
+            <Home />
+          </Route>
+          <PrivateRoute exact path={Routes.BankDetails}>
+            <BankDetails />
+          </PrivateRoute>
+          <Route exact path={Routes.Root}>
+            <Redirect to={Routes.Login} />
+          </Route>
+        </IonRouterOutlet>
+      </IonReactRouter>
+    </FirebaseAuthProvider>
   </IonApp>
 );
 

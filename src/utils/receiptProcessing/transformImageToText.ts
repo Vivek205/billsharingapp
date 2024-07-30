@@ -3,9 +3,7 @@ import axios from "axios";
 export const transformImageToText = async (image: string) => {
   // LLM Model: "@cf/llava-hf/llava-1.5-7b-hf"
 
-  // TODO: uncomment this when the API is ready
-  // const url = import.meta.env.VITE_IMAGE_ANALYSIS_API;
-  const url = "/api";
+  const url = import.meta.env.VITE_IMAGE_ANALYSIS_API;
 
   const response = await axios.post(
     url,

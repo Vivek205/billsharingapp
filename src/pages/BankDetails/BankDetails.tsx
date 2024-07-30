@@ -18,16 +18,14 @@ import {
 import { save } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { Routes } from "../../Routes";
+import { useFirebaseContext } from "../../utils/auth/firebase";
+import { setBankDetails } from "../../utils/database/firestore";
 
 export const BankDetails = () => {
   const [accountName, setAccountName] = useState("");
   const [IBAN, setIBAN] = useState("");
   const [isSaving, setIsSaving] = useState(false);
-
-  console.log("Bank details");
-  useEffect(() => {
-    console.log("Bank details mounted");
-  }, []);
+  const { user } = useFirebaseContext();
 
   const handleSubmit = async () => {
     if (!accountName || !IBAN) {
@@ -35,9 +33,10 @@ export const BankDetails = () => {
       return;
     }
     setIsSaving(true);
-    setTimeout(() => {
-      setIsSaving(false);
-    }, 2000);
+    if (user?.uid) {
+      await setBankDetails({ accountName, iban: IBAN }, user?.uid);
+    }
+    setIsSaving(false);
   };
 
   return (

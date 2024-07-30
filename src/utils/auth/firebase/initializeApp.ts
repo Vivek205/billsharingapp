@@ -15,6 +15,14 @@ export const initializeFirebase = () => {
   }
 };
 
+export const getFirebaseApp = () => {
+  if (!app) {
+    initializeFirebase();
+  }
+
+  return app;
+};
+
 export const getFirebaseAuth = () => {
   if (!auth) {
     initializeFirebase();

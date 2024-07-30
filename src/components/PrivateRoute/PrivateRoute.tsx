@@ -14,8 +14,6 @@ export const PrivateRoute: FC<ComponentProps<typeof Route>> = ({
 }) => {
   const { user, isLoading } = useFirebaseContext();
 
-  console.log("rest", rest);
-
   if (isLoading) {
     return (
       <div className="animation-container">

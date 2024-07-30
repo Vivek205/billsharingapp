@@ -52,8 +52,6 @@ export const Signup: React.FC = () => {
     }
   };
 
-  console.log({ email, password });
-
   return (
     <IonPage>
       <IonHeader>

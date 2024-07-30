@@ -1,0 +1,1 @@
+export { setBankDetails } from "./bankDetails";

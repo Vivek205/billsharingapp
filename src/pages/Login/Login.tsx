@@ -38,8 +38,7 @@ export const Login: React.FC = () => {
       return;
     }
     try {
-      await signinWithPassword(email, password);
-      console.log("state", state);
+      const user = await signinWithPassword(email, password);
       if (state?.path) {
         router.push(state.path, "root");
       } else {
@@ -53,7 +52,6 @@ export const Login: React.FC = () => {
   const handleGoogleSignIn = async () => {
     try {
       await signinWithGoogle();
-      console.log("state", state);
       if (state?.path) {
         router.push(state.path, "root");
       } else {
@@ -63,8 +61,6 @@ export const Login: React.FC = () => {
       window.alert?.(error.message);
     }
   };
-
-  console.log({ email, password });
 
   return (
     <IonPage>

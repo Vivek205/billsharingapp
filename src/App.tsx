@@ -7,6 +7,11 @@ import {
   FirebaseAuthProvider,
   initializeFirebase,
 } from "./utils/auth/firebase";
+import { Signup } from "./pages/Signup";
+import { Routes } from "./Routes";
+import { BankDetails } from "./pages/BankDetails";
+import { PrivateRoute } from "./components/PrivateRoute/PrivateRoute";
+import { initializeFirestore } from "./utils/database/firestore";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -37,13 +42,10 @@ import "@ionic/react/css/palettes/dark.system.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import { Signup } from "./pages/Signup";
-import { Routes } from "./Routes";
-import { BankDetails } from "./pages/BankDetails";
-import { PrivateRoute } from "./components/PrivateRoute/PrivateRoute";
 
 setupIonicReact();
 initializeFirebase();
+initializeFirestore();
 
 const App: React.FC = () => (
   <IonApp>
@@ -56,9 +58,9 @@ const App: React.FC = () => (
           <Route exact path={Routes.Signup}>
             <Signup />
           </Route>
-          <Route exact path={Routes.Home}>
+          <PrivateRoute exact path={Routes.Home}>
             <Home />
-          </Route>
+          </PrivateRoute>
           <PrivateRoute exact path={Routes.BankDetails}>
             <BankDetails />
           </PrivateRoute>

@@ -1,5 +1,7 @@
 {
   "name": "billSharingApp",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "react-vite"
 }

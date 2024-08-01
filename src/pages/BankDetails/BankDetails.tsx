@@ -19,13 +19,26 @@ import { save } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { Routes } from "../../Routes";
 import { useFirebaseContext } from "../../utils/auth/firebase";
-import { setBankDetails } from "../../utils/database/firestore";
+import { getBankDetails, setBankDetails } from "../../utils/database/firestore";
 
 export const BankDetails = () => {
   const [accountName, setAccountName] = useState("");
   const [IBAN, setIBAN] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const { user } = useFirebaseContext();
+
+  useEffect(() => {
+    const fetchBankDetails = async () => {
+      if (user?.uid) {
+        const bankDetails = await getBankDetails(user.uid);
+        if (bankDetails) {
+          setAccountName(bankDetails.accountName);
+          setIBAN(bankDetails.iban);
+        }
+      }
+    };
+    fetchBankDetails();
+  }, [user]);
 
   const handleSubmit = async () => {
     if (!accountName || !IBAN) {

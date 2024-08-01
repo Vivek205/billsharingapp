@@ -1,4 +1,4 @@
 export { initializeFirestore } from "./firestore";
 
 export { setUser } from "./user";
-export { setBankDetails } from "./bankDetails";
+export { setBankDetails, getBankDetails } from "./bankDetails";

@@ -1,1 +1,1 @@
-export { setBankDetails } from "./bankDetails";
+export { setBankDetails, getBankDetails } from "./bankDetails";

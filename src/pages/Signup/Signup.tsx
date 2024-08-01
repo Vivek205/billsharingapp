@@ -12,12 +12,13 @@ import {
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Routes } from "../../Routes";
 import { logoGoogle } from "ionicons/icons";
 import {
   signinWithGoogle,
   signupWithPassword,
+  useFirebaseContext,
 } from "../../utils/auth/firebase";
 
 import "./Signup.css";

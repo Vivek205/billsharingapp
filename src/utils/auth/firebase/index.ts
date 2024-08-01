@@ -1,6 +1,6 @@
 export {
   initializeFirebase,
-  getFirebaseAuth,
+  // getFirebaseAuth,
   getFirebaseApp,
 } from "./initializeApp";
 

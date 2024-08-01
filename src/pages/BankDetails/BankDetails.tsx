@@ -32,11 +32,21 @@ export const BankDetails = () => {
       window.alert("Please fill in all fields");
       return;
     }
-    setIsSaving(true);
+    console.log("start saving bank details");
+
     if (user?.uid) {
-      await setBankDetails({ accountName, iban: IBAN }, user?.uid);
+      setIsSaving(true);
+      try {
+        await setBankDetails({ accountName, iban: IBAN }, user?.uid);
+        console.log("bank details saved");
+      } catch (error) {
+        console.log("error in saving bank details", error);
+      } finally {
+        setIsSaving(false);
+      }
+    } else {
+      console.log("user not found in bank details");
     }
-    setIsSaving(false);
   };
 
   return (

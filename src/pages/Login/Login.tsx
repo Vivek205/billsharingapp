@@ -12,12 +12,13 @@ import {
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Routes } from "../../Routes";
 import { logoGoogle } from "ionicons/icons";
 import {
   signinWithGoogle,
   signinWithPassword,
+  useFirebaseContext,
 } from "../../utils/auth/firebase";
 
 import "./Login.css";
@@ -35,22 +36,29 @@ export const Login: React.FC = () => {
 
     if (!email || !password) {
       window.alert?.("Please fill in all fields");
+
       return;
     }
     try {
+      console.log("signin with password");
       const user = await signinWithPassword(email, password);
+      console.log("user resolved", user);
       if (state?.path) {
         router.push(state.path, "root");
       } else {
         router.push(Routes.Home, "root");
       }
     } catch (error: any) {
+      console.log("error in password signin", error);
       window.alert?.(error.message);
+      // TODO: Remove the below line
+      router.push(Routes.Home, "root");
     }
   };
 
   const handleGoogleSignIn = async () => {
     try {
+      console.log("signin with google initiated");
       await signinWithGoogle();
       if (state?.path) {
         router.push(state.path, "root");
@@ -58,7 +66,10 @@ export const Login: React.FC = () => {
         router.push(Routes.Home, "root");
       }
     } catch (error: any) {
+      console.log("error in google signin", error);
       window.alert?.(error.message);
+      // TODO: Remove the below line
+      router.push(Routes.Home, "root");
     }
   };
 

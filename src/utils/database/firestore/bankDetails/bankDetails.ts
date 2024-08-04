@@ -1,11 +1,22 @@
 import { doc, setDoc } from "firebase/firestore";
 import { getDbInstance } from "../firestore";
 import { BankDetails } from "./types";
+import { FirebaseFirestore } from "@capacitor-firebase/firestore";
 
 const COLLECTION_NAME = "bankDetails";
 
 export const setBankDetails = (bankDetails: BankDetails, userId: string) => {
-  const db = getDbInstance();
-  const docRef = doc(db, COLLECTION_NAME, userId);
-  return setDoc(docRef, bankDetails);
+  FirebaseFirestore.setDocument({
+    reference: `${COLLECTION_NAME}/${userId}`,
+    data: bankDetails,
+    merge: true,
+  });
+};
+
+export const getBankDetails = async (userId: string) => {
+  const { snapshot } = await FirebaseFirestore.getDocument<BankDetails>({
+    reference: `${COLLECTION_NAME}/${userId}`,
+  });
+  console.log("snapshot", snapshot);
+  return snapshot.data;
 };

@@ -12,6 +12,7 @@ export function usePhotoGallery() {
         resultType: CameraResultType.Base64,
         source: CameraSource.Camera,
         quality: 100,
+        allowEditing: true,
       });
       console.log("photo", photo);
       return photo;

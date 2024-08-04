@@ -19,7 +19,7 @@ import { save } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { Routes } from "../../Routes";
 import { useFirebaseContext } from "../../utils/auth/firebase";
-import { setBankDetails } from "../../utils/database/firestore";
+import { getBankDetails, setBankDetails } from "../../utils/database/firestore";
 
 export const BankDetails = () => {
   const [accountName, setAccountName] = useState("");
@@ -27,16 +27,39 @@ export const BankDetails = () => {
   const [isSaving, setIsSaving] = useState(false);
   const { user } = useFirebaseContext();
 
+  useEffect(() => {
+    const fetchBankDetails = async () => {
+      if (user?.uid) {
+        const bankDetails = await getBankDetails(user.uid);
+        if (bankDetails) {
+          setAccountName(bankDetails.accountName);
+          setIBAN(bankDetails.iban);
+        }
+      }
+    };
+    fetchBankDetails();
+  }, [user]);
+
   const handleSubmit = async () => {
     if (!accountName || !IBAN) {
       window.alert("Please fill in all fields");
       return;
     }
-    setIsSaving(true);
+    console.log("start saving bank details");
+
     if (user?.uid) {
-      await setBankDetails({ accountName, iban: IBAN }, user?.uid);
+      setIsSaving(true);
+      try {
+        await setBankDetails({ accountName, iban: IBAN }, user?.uid);
+        console.log("bank details saved");
+      } catch (error) {
+        console.log("error in saving bank details", error);
+      } finally {
+        setIsSaving(false);
+      }
+    } else {
+      console.log("user not found in bank details");
     }
-    setIsSaving(false);
   };
 
   return (

@@ -1,6 +1,5 @@
-import { getFirebaseAuth } from "./initializeApp";
+import { FirebaseAuthentication } from "@capacitor-firebase/authentication";
 
 export const signout = () => {
-  const auth = getFirebaseAuth();
-  return auth.signOut();
+  return FirebaseAuthentication.signOut();
 };

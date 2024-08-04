@@ -25,6 +25,8 @@ import { Routes } from "../../Routes";
 import { HOME_PAGE_MENU_ID } from "./constants";
 import { signout } from "../../utils/auth/firebase";
 
+import "./Home.css";
+
 export const Home: React.FC = () => {
   const { takePhoto } = usePhotoGallery();
   const router = useIonRouter();
@@ -63,12 +65,16 @@ export const Home: React.FC = () => {
     }
   };
 
+  const redirectToBankDetails = () => {
+    router.push(Routes.BankDetails, "none");
+  };
+
   return (
     <>
-      <IonMenu type="push" contentId={HOME_PAGE_MENU_ID}>
+      <IonMenu type="push" side="end" contentId={HOME_PAGE_MENU_ID}>
         <IonHeader>
           <IonToolbar>
-            <IonTitle>Menu Content</IonTitle>
+            <IonTitle>Settings</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent className="ion-padding">
@@ -83,7 +89,7 @@ export const Home: React.FC = () => {
       <IonPage id={HOME_PAGE_MENU_ID}>
         <IonHeader>
           <IonToolbar>
-            <IonButtons slot="start">
+            <IonButtons slot="end">
               <IonMenuButton />
             </IonButtons>
             <IonTitle>Bill Sharing</IonTitle>
@@ -96,8 +102,9 @@ export const Home: React.FC = () => {
             </IonLabel>
             <IonButton
               slot="end"
-              routerLink={Routes.BankDetails}
-              routerDirection="forward"
+              // routerLink={Routes.BankDetails}
+              // routerDirection="forward"
+              onClick={redirectToBankDetails}
             >
               <IonIcon slot="icon-only" icon={add} />
             </IonButton>

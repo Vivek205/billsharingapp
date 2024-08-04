@@ -21,22 +21,24 @@ import {
   convertReceiptImageToJson,
   useReceiptProcessingContext,
 } from "../../utils/receiptProcessing";
+import { UseAppToast } from "../../utils/hooks/useAppToast";
 
 export const ReadingReceipt: React.FC = () => {
   const router = useIonRouter();
   const { rawImage, setImageJsonString } = useReceiptProcessingContext();
+  const [present] = UseAppToast();
 
   const handleRawImage = async () => {
     try {
       const imageJsonString = await convertReceiptImageToJson(rawImage);
-      if (imageJsonString) {
-        setImageJsonString(imageJsonString);
-      }
+
+      setImageJsonString(imageJsonString);
+
       // TODO: Handle Error
       router.push(Routes.ItemsReview, "root");
     } catch (error) {
-      console.log("error in reading receipt", error);
-      alert(error);
+      present("Unable to read the receipt");
+      router.goBack();
     }
   };
 

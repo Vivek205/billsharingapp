@@ -16,6 +16,7 @@ import { ReadingReceipt } from "./pages/ReadingReceipt";
 import { ItemsReview } from "./pages/ItemsReview";
 import { SharePaymentLink } from "./pages/SharePaymentLink";
 import { ReceiptProcessingProvider } from "./utils/receiptProcessing";
+import { AuthRoute } from "./components/AuthRoute/AuthRoute";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -56,12 +57,12 @@ const App: React.FC = () => (
     <FirebaseAuthProvider>
       <IonReactRouter>
         <IonRouterOutlet>
-          <Route exact path={Routes.Login}>
+          <AuthRoute exact path={Routes.Login}>
             <Login />
-          </Route>
-          <Route exact path={Routes.Signup}>
+          </AuthRoute>
+          <AuthRoute exact path={Routes.Signup}>
             <Signup />
-          </Route>
+          </AuthRoute>
           <ReceiptProcessingProvider>
             <PrivateRoute exact path={Routes.Home}>
               <Home />

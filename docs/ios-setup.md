@@ -1,3 +1,17 @@
+## To run the app from cli
+
+- Find your phone / simulator APP 's target id
+
+```bash
+ionic cap run ios --list
+```
+
+- Run the app on your phone / simulator with the target id
+
+```bash
+ionic cap run ios --livereload --target <target id>
+```
+
 ## Things to consider when we clean and re-create the ios project
 
 ### Prerequisites
@@ -21,53 +35,20 @@ Add the following keys to the Info.plist file
 ### Firebase Setup
 
 #### GoogleService-Info.plist
+
 - Download the `GoogleService-Info.plist` file from the [Firebase console](https://firebase.google.com/docs/ios/setup#add-config-file)
 - Add the file to the `App/App` folder
 - Add the following keys to the `App/App/Info.plist` file
 
-#### Add Firebase to the Podfile
+#### Add the necessary @capacitor-firebase/ pods
 
-Add the following lines to the `App/Podfile` file
-
-```ruby
-  # Firebase related pods
-  pod 'FirebaseAuth'
-  pod 'FirebaseFirestore'
-```
-
-#### Configure Firebase in the AppDelegate.swift file
-
-In the `App/App/AppDelegate.swift` file, 
-
- - Import the Firebase libraries
- - Configure Firebase
-
-```swift
-import UIKit
-import Capacitor
-import FirebaseCore
-import FirebaseFirestore
-import FirebaseAuth
-
-@UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
-
-    var window: UIWindow?	
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        FirebaseApp.configure()
-        return true
-    }
-
-	...
-
-}											
-```
-
-#### Install the Firebase pod
-
-Run the below command to install the Firebase pod setup in the previous step
+- File `ios/App/Podfile`
+- Add the pods under the section `#Add your Pods here`
 
 ```bash
-ionic cap sync
+  target 'App' do
+  capacitor_pods
+  # Add your Pods here
+  pod 'CapacitorFirebaseAuthentication/Google', :path => '../../node_modules/@capacitor-firebase/authentication'
+  pod 'CapacitorFirebaseFirestore', :path => '../../node_modules/@capacitor-firebase/firestore'
 ```

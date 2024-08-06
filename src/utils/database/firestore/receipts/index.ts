@@ -1,0 +1,1 @@
+export { setReceipt } from "./receipt";

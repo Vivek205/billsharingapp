@@ -29,7 +29,10 @@ target 'App' do
   # Add your Pods here
   # FirebaseAuthentication Plugin
   pod 'CapacitorFirebaseAuthentication/Google', :path => '../../node_modules/@capacitor-firebase/authentication'
+  # No SQL Database for the App
   pod 'CapacitorFirebaseFirestore', :path => '../../node_modules/@capacitor-firebase/firestore'
+  # Cloud Storage for images
+  pod 'CapacitorFirebaseStorage', :path => '../../node_modules/@capacitor-firebase/storage'
 end
 
 post_install do |installer|

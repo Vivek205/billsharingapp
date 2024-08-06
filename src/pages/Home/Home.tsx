@@ -1,4 +1,5 @@
 import {
+  IonAvatar,
   IonButton,
   IonButtons,
   IonCol,
@@ -23,14 +24,35 @@ import { usePhotoGallery } from "../../utils/hooks/usePhotoGallery";
 import { useReceiptProcessingContext } from "../../utils/receiptProcessing";
 import { Routes } from "../../Routes";
 import { HOME_PAGE_MENU_ID } from "./constants";
-import { signout } from "../../utils/auth/firebase";
+import { signout, useFirebaseContext } from "../../utils/auth/firebase";
 
 import "./Home.css";
+import { UseAppToast } from "../../utils/hooks/useAppToast";
+import { useEffect, useState } from "react";
+import { getUserReceipts, Receipt } from "../../utils/database/firestore";
+import { getReceiptsByIds } from "../../utils/database/firestore/receipts/receipt";
 
 export const Home: React.FC = () => {
   const { takePhoto } = usePhotoGallery();
   const router = useIonRouter();
   const { setRawImage } = useReceiptProcessingContext();
+  const [present] = UseAppToast();
+  const { user } = useFirebaseContext();
+  const [userReceipts, setUserReceipts] = useState<Receipt[]>([]);
+
+  const getUserReceiptDetails = async (userId: string) => {
+    const receiptIds = await getUserReceipts(userId);
+    console.log("receipt ids", receiptIds);
+    if (!receiptIds) return;
+    const receipts = await getReceiptsByIds(receiptIds);
+    setUserReceipts(receipts);
+  };
+
+  useEffect(() => {
+    if (user?.uid) {
+      getUserReceiptDetails(user.uid);
+    }
+  }, [user?.uid]);
 
   const handleCapture = async () => {
     try {
@@ -45,7 +67,7 @@ export const Home: React.FC = () => {
       // TODO: Afer capturing the image, redirect to ReadingReceipt
     } catch (error) {
       console.log("error in capture", error);
-      alert("Error capturing image");
+      present("Unable to pick image. Please check the camera permissions");
     }
 
     // try {
@@ -69,6 +91,7 @@ export const Home: React.FC = () => {
     router.push(Routes.BankDetails, "none");
   };
 
+  console.log("user receipts", userReceipts);
   return (
     <>
       <IonMenu type="push" side="end" contentId={HOME_PAGE_MENU_ID}>
@@ -109,11 +132,25 @@ export const Home: React.FC = () => {
               <IonIcon slot="icon-only" icon={add} />
             </IonButton>
           </IonItem>
-          <IonItem color="light" className="ion-margin-top">
-            <IonLabel>
-              No expenses yet. Capture a receipt to start splitting the bills
-            </IonLabel>
-          </IonItem>
+          <IonList className="ion-margin-top">
+            {userReceipts.length > 0 ? (
+              userReceipts.map((receipt) => (
+                <IonItem key={receipt.id} button>
+                  <IonAvatar slot="start">
+                    <img src={receipt.imageUrl} alt="receipt" />
+                  </IonAvatar>
+                  {receipt.createdAt}
+                </IonItem>
+              ))
+            ) : (
+              <IonItem>
+                <IonLabel>
+                  No expenses yet. Capture a receipt to start splitting the
+                  bills
+                </IonLabel>
+              </IonItem>
+            )}
+          </IonList>
         </IonContent>
         <IonFooter className="ion-margin-bottom">
           <div className="ion-text-center">

@@ -6,8 +6,6 @@ import {
   useEffect,
   useState,
 } from "react";
-// import { getFirebaseAuth } from "./initializeApp";
-// import { User } from "firebase/auth";
 import { FirebaseAuthContextType } from "./types";
 import {
   FirebaseAuthentication,
@@ -26,12 +24,6 @@ export const FirebaseAuthProvider: FC<{ children: ReactNode }> = ({
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // const auth = getFirebaseAuth();
-    // const unsubscribe = auth.onAuthStateChanged((user) => {
-    //   console.log("user", user);
-    //   setUser(user);
-    //   setIsLoading(false);
-    // });
     FirebaseAuthentication.removeAllListeners().then(() => {
       FirebaseAuthentication.addListener("authStateChange", (change) => {
         console.log("authStateChange", change);

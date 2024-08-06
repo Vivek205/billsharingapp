@@ -22,15 +22,39 @@ import {
   useReceiptProcessingContext,
 } from "../../utils/receiptProcessing";
 import { UseAppToast } from "../../utils/hooks/useAppToast";
+import { setReceipt, uploadReceiptFile } from "../../utils/database/firestore";
+import { useFirebaseContext } from "../../utils/auth/firebase";
+import {
+  getUserReceipts,
+  setUserReceipt,
+} from "../../utils/database/firestore/user/user";
 
 export const ReadingReceipt: React.FC = () => {
   const router = useIonRouter();
   const { rawImage, setImageJsonString } = useReceiptProcessingContext();
   const [present] = UseAppToast();
+  const { user } = useFirebaseContext();
 
   const handleRawImage = async () => {
     try {
-      const imageJsonString = await convertReceiptImageToJson(rawImage);
+      if (!user?.uid) return;
+      const [receiptFilePath, imageJsonString, userReceipts] =
+        await Promise.all([
+          uploadReceiptFile(user.uid, rawImage),
+          convertReceiptImageToJson(rawImage),
+          // TODO: Get User details once and save it in the Context
+          getUserReceipts(user.uid),
+        ]);
+
+      if (receiptFilePath) {
+        const receipt = await setReceipt(
+          user.uid,
+          receiptFilePath,
+          imageJsonString
+        );
+
+        await setUserReceipt(user.uid, [...(userReceipts || []), receipt]);
+      }
 
       setImageJsonString(imageJsonString);
 
@@ -38,6 +62,7 @@ export const ReadingReceipt: React.FC = () => {
       router.push(Routes.ItemsReview, "root");
     } catch (error) {
       present("Unable to read the receipt");
+      console.log("error in reading receipt", error);
       router.goBack();
     }
   };

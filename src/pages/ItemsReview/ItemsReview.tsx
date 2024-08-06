@@ -13,7 +13,7 @@ import {
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Routes } from "../../Routes";
 import {
   ParsedReceipt,

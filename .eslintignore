@@ -1,0 +1,11 @@
+# Build files
+ios/*
+android/*
+dist/*
+# Test files
+cypress/*
+# Config files
+vite.config.ts
+capacitor.config.ts
+cypress.config.ts
+.eslintrc.cjs

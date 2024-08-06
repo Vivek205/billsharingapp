@@ -49,9 +49,9 @@ export const SharePaymentLink: FC = () => {
       </IonHeader>
       <IonContent className="ion-padding">
         <IonInput
+          onIonChange={(e) => setReceiptTitle(e.detail.value!)}
           placeholder="What is this receipt for?"
           value={receiptTitle}
-          onIonChange={(e) => setReceiptTitle(e.detail.value!)}
         />
       </IonContent>
       <IonFooter className="ion-padding-bottom">

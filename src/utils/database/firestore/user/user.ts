@@ -1,8 +1,5 @@
-import { doc, setDoc } from "firebase/firestore";
-import { getDbInstance } from "../firestore";
 import { UserDetails } from "./types";
 import { FirebaseFirestore } from "@capacitor-firebase/firestore";
-import { Receipt } from "../receipts/types";
 
 const COLLECTION_NAME = "users";
 

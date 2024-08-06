@@ -2,7 +2,6 @@ import { ComponentProps, FC } from "react";
 import { Redirect, Route } from "react-router";
 import { useFirebaseContext } from "../../utils/auth/firebase";
 import { Routes } from "../../Routes";
-import { IonLoading } from "@ionic/react";
 import Lottie from "lottie-react";
 import unlockAnimation from "../../../public/lottie-animations/Unlock.json";
 

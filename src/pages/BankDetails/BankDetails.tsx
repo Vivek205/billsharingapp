@@ -81,18 +81,18 @@ export const BankDetails = () => {
         <IonList className="ion-padding-top">
           <IonItem>
             <IonInput
-              type="text"
-              placeholder="Account Name"
-              value={accountName}
               onIonChange={(e) => setAccountName(e.detail.value!)}
+              placeholder="Account Name"
+              type="text"
+              value={accountName}
             />
           </IonItem>
           <IonItem>
             <IonInput
+              onIonChange={(e) => setIBAN(e.detail.value!)}
               placeholder="IBAN"
               type="text"
               value={IBAN}
-              onIonChange={(e) => setIBAN(e.detail.value!)}
             />
           </IonItem>
         </IonList>
@@ -105,8 +105,8 @@ export const BankDetails = () => {
       <IonFooter className="ion-padding-bottom">
         {isSaving && <IonProgressBar type="indeterminate" />}
         <div className="ion-text-center ion-padding-top">
-          <IonButton onClick={handleSubmit} disabled={isSaving}>
-            <IonIcon slot="start" icon={save}></IonIcon>
+          <IonButton disabled={isSaving} onClick={handleSubmit}>
+            <IonIcon icon={save} slot="start"></IonIcon>
             Save
           </IonButton>
         </div>

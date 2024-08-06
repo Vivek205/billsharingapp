@@ -1,10 +1,8 @@
-import { FirebaseApp, getApp, initializeApp } from "firebase/app";
+import { FirebaseApp, initializeApp } from "firebase/app";
 import { firebaseConfig } from "./constants";
 import {
   Auth,
   getAuth,
-  indexedDBLocalPersistence,
-  initializeAuth,
 } from "firebase/auth";
 import {
   FirebaseAuthentication,

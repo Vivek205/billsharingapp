@@ -6,21 +6,18 @@ import {
   IonHeader,
   IonIcon,
   IonInput,
-  IonItem,
-  IonList,
   IonPage,
   IonText,
   IonTitle,
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Routes } from "../../Routes";
 import { logoGoogle } from "ionicons/icons";
 import {
   signinWithGoogle,
   signupWithPassword,
-  useFirebaseContext,
 } from "../../utils/auth/firebase";
 
 import "./Signup.css";
@@ -51,7 +48,7 @@ export const Signup: React.FC = () => {
     try {
       await signupWithPassword(email, password);
       router.push(Routes.Home, "forward");
-    } catch (error: any) {
+    } catch (error) {
       // TODO: Replace alert with toast
       window.alert?.(error.message);
     }
@@ -61,7 +58,7 @@ export const Signup: React.FC = () => {
     try {
       await signinWithGoogle();
       router.push(Routes.Home, "forward");
-    } catch (error: any) {
+    } catch (error) {
       // TODO: Replace alert with toast
       window.alert?.(error.message);
     }
@@ -76,10 +73,10 @@ export const Signup: React.FC = () => {
       </IonHeader>
       <IonContent className="ion-padding">
         <form
-          onSubmit={handleSubmit(signupHandler)}
           className="form-container"
-          noValidate
           id={SIGNUP_PAGE_FORM_ID}
+          noValidate
+          onSubmit={handleSubmit(signupHandler)}
         >
           <div>
             <IonText className="ion-text-center">
@@ -91,8 +88,8 @@ export const Signup: React.FC = () => {
             <IonCard>
               <IonCardContent>
                 <IonInput
-                  type="text"
                   placeholder="email id"
+                  type="text"
                   {...register("email", {
                     required: true,
                     minLength: 5,
@@ -125,20 +122,20 @@ export const Signup: React.FC = () => {
           </div>
           <div>
             <IonButton
-              form={SIGNUP_PAGE_FORM_ID}
               className="ion-margin-top"
-              type="submit"
               expand="block"
+              form={SIGNUP_PAGE_FORM_ID}
+              type="submit"
             >
               Signup
             </IonButton>
             <IonButton
-              color="light"
               className="ion-margin-top"
+              color="light"
               expand="block"
               onClick={handleGoogleSignIn}
             >
-              <IonIcon slot="start" icon={logoGoogle}></IonIcon>
+              <IonIcon icon={logoGoogle} slot="start"></IonIcon>
               Sign in with Google
             </IonButton>
           </div>

@@ -2,7 +2,6 @@ import {
   Camera,
   CameraResultType,
   CameraSource,
-  Photo,
 } from "@capacitor/camera";
 
 export function usePhotoGallery() {

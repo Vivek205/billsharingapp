@@ -1,5 +1,3 @@
-import { doc, setDoc } from "firebase/firestore";
-import { getDbInstance } from "../firestore";
 import { BankDetails } from "./types";
 import { FirebaseFirestore } from "@capacitor-firebase/firestore";
 

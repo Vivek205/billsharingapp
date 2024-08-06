@@ -2,10 +2,8 @@ import {
   IonAvatar,
   IonButton,
   IonButtons,
-  IonCol,
   IonContent,
   IonFooter,
-  IonGrid,
   IonHeader,
   IonIcon,
   IonItem,
@@ -14,7 +12,6 @@ import {
   IonMenu,
   IonMenuButton,
   IonPage,
-  IonRow,
   IonTitle,
   IonToolbar,
   useIonRouter,
@@ -94,7 +91,7 @@ export const Home: React.FC = () => {
   console.log("user receipts", userReceipts);
   return (
     <>
-      <IonMenu type="push" side="end" contentId={HOME_PAGE_MENU_ID}>
+      <IonMenu contentId={HOME_PAGE_MENU_ID} side="end" type="push">
         <IonHeader>
           <IonToolbar>
             <IonTitle>Settings</IonTitle>
@@ -103,7 +100,7 @@ export const Home: React.FC = () => {
         <IonContent className="ion-padding">
           <IonList>
             <IonItem onClick={handleLogout}>
-              <IonIcon slot="start" icon={logOut} />
+              <IonIcon icon={logOut} slot="start" />
               <IonLabel>Logout</IonLabel>
             </IonItem>
           </IonList>
@@ -123,21 +120,16 @@ export const Home: React.FC = () => {
             <IonLabel>
               Enter your bank details to start receiving payments
             </IonLabel>
-            <IonButton
-              slot="end"
-              // routerLink={Routes.BankDetails}
-              // routerDirection="forward"
-              onClick={redirectToBankDetails}
-            >
-              <IonIcon slot="icon-only" icon={add} />
+            <IonButton onClick={redirectToBankDetails}>
+              <IonIcon icon={add} slot="icon-only" />
             </IonButton>
           </IonItem>
           <IonList className="ion-margin-top">
             {userReceipts.length > 0 ? (
               userReceipts.map((receipt) => (
-                <IonItem key={receipt.id} button>
+                <IonItem button key={receipt.id}>
                   <IonAvatar slot="start">
-                    <img src={receipt.imageUrl} alt="receipt" />
+                    <img alt="receipt" src={receipt.imageUrl} />
                   </IonAvatar>
                   {receipt.createdAt}
                 </IonItem>
@@ -155,7 +147,7 @@ export const Home: React.FC = () => {
         <IonFooter className="ion-margin-bottom">
           <div className="ion-text-center">
             <IonButton onClick={handleCapture}>
-              <IonIcon slot="start" icon={camera}></IonIcon>
+              <IonIcon icon={camera} slot="start"></IonIcon>
               Capture Receipt
             </IonButton>
           </div>

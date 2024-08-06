@@ -1,5 +1,7 @@
 import {
   IonButton,
+  IonCard,
+  IonCardContent,
   IonContent,
   IonHeader,
   IonIcon,
@@ -22,6 +24,10 @@ import {
 } from "../../utils/auth/firebase";
 
 import "./Signup.css";
+import { SignupFormInputs } from "./types";
+import { SubmitHandler, useForm } from "react-hook-form";
+import classNames from "classnames";
+import { SIGNUP_PAGE_FORM_ID } from "./constants";
 
 export const Signup: React.FC = () => {
   const router = useIonRouter();
@@ -29,17 +35,24 @@ export const Signup: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { touchedFields, errors, isSubmitting, submitCount },
+  } = useForm<SignupFormInputs>({
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+  });
 
-    if (!email || !password) {
-      window.alert?.("Please fill in all fields");
-      return;
-    }
+  const signupHandler: SubmitHandler<SignupFormInputs> = async ({
+    email,
+    password,
+  }) => {
     try {
       await signupWithPassword(email, password);
       router.push(Routes.Home, "forward");
     } catch (error: any) {
+      // TODO: Replace alert with toast
       window.alert?.(error.message);
     }
   };
@@ -49,6 +62,7 @@ export const Signup: React.FC = () => {
       await signinWithGoogle();
       router.push(Routes.Home, "forward");
     } catch (error: any) {
+      // TODO: Replace alert with toast
       window.alert?.(error.message);
     }
   };
@@ -61,7 +75,12 @@ export const Signup: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <form onSubmit={handleSubmit} className="form-container">
+        <form
+          onSubmit={handleSubmit(signupHandler)}
+          className="form-container"
+          noValidate
+          id={SIGNUP_PAGE_FORM_ID}
+        >
           <div>
             <IonText className="ion-text-center">
               <h1>Create a new account</h1>
@@ -69,28 +88,48 @@ export const Signup: React.FC = () => {
             <IonText className="ion-text-center">
               <p>Fill in the form to continue</p>
             </IonText>
-
-            <IonList className="ion-padding-top">
-              <IonItem>
+            <IonCard>
+              <IonCardContent>
                 <IonInput
                   type="text"
-                  placeholder="Username"
-                  value={email}
-                  onIonChange={(e) => setEmail(e.detail.value!)}
+                  placeholder="email id"
+                  {...register("email", {
+                    required: true,
+                    minLength: 5,
+                  })}
+                  className={classNames({
+                    "ion-touched": touchedFields.email || !!submitCount,
+                    "ion-invalid": errors.email,
+                    "ion-valid": !errors.email,
+                  })}
+                  errorText="Invalid Email Id"
+                  onIonChange={(e) => register("email").onChange(e)}
                 />
-              </IonItem>
-              <IonItem>
+
                 <IonInput
                   placeholder="password"
                   type="password"
-                  value={password}
-                  onIonChange={(e) => setPassword(e.detail.value!)}
+                  {...register("password", {
+                    required: true,
+                  })}
+                  className={classNames({
+                    "ion-touched": touchedFields.password || !!submitCount,
+                    "ion-invalid": errors.password,
+                    "ion-valid": !errors.password,
+                  })}
+                  errorText="Invalid Password"
+                  onIonChange={(e) => register("password").onChange(e)}
                 />
-              </IonItem>
-            </IonList>
+              </IonCardContent>
+            </IonCard>
           </div>
           <div>
-            <IonButton className="ion-margin-top" type="submit" expand="block">
+            <IonButton
+              form={SIGNUP_PAGE_FORM_ID}
+              className="ion-margin-top"
+              type="submit"
+              expand="block"
+            >
               Signup
             </IonButton>
             <IonButton

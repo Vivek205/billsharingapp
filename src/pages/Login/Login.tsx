@@ -1,5 +1,7 @@
 import {
   IonButton,
+  IonCard,
+  IonCardContent,
   IonContent,
   IonHeader,
   IonIcon,
@@ -23,36 +25,39 @@ import {
 
 import "./Login.css";
 import { useLocation } from "react-router";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { LoginFormInputs } from "./types";
+import classNames from "classnames";
+import { LOGIN_PAGE_FORM_ID } from "./constants";
 
 export const Login: React.FC = () => {
   const router = useIonRouter();
-  // TODO: Replace with react form
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const { state } = useLocation<{ path?: string }>();
+  const {
+    register,
+    handleSubmit,
+    formState: { touchedFields, errors, isSubmitting, submitCount },
+  } = useForm<LoginFormInputs>({
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+  });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!email || !password) {
-      window.alert?.("Please fill in all fields");
-
-      return;
-    }
+  const signinHandler: SubmitHandler<LoginFormInputs> = async ({
+    email,
+    password,
+  }) => {
     try {
-      console.log("signin with password");
-      const user = await signinWithPassword(email, password);
-      console.log("user resolved", user);
+      await signinWithPassword(email, password);
+
       if (state?.path) {
         router.push(state.path, "root");
       } else {
         router.push(Routes.Home, "root");
       }
     } catch (error: any) {
+      // TODO: Replace alert with toast
       console.log("error in password signin", error);
       window.alert?.(error.message);
-      // TODO: Remove the below line
-      router.push(Routes.Home, "root");
     }
   };
 
@@ -81,7 +86,12 @@ export const Login: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <form onSubmit={handleSubmit} className="form-container">
+        <form
+          id={LOGIN_PAGE_FORM_ID}
+          onSubmit={handleSubmit(signinHandler)}
+          className="form-container"
+          noValidate
+        >
           <div>
             <IonText className="ion-text-center">
               <h1>Welcome Back!</h1>
@@ -89,31 +99,53 @@ export const Login: React.FC = () => {
             <IonText className="ion-text-center">
               <p>Please sign in to your account</p>
             </IonText>
-
-            <IonList className="ion-padding-top">
-              <IonItem>
+            <IonCard>
+              <IonCardContent>
                 <IonInput
                   type="text"
-                  placeholder="Username"
-                  value={email}
-                  onIonChange={(e) => setEmail(e.detail.value!)}
+                  placeholder="email id"
+                  {...register("email", {
+                    required: true,
+                    minLength: 5,
+                  })}
+                  className={classNames({
+                    "ion-touched": touchedFields.email || !!submitCount,
+                    "ion-invalid": errors.email,
+                    "ion-valid": !errors.email,
+                  })}
+                  errorText="Invalid Email Id"
+                  onIonChange={(e) => register("email").onChange(e)}
                 />
-              </IonItem>
-              <IonItem>
+
                 <IonInput
                   placeholder="password"
                   type="password"
-                  value={password}
-                  onIonChange={(e) => setPassword(e.detail.value!)}
+                  {...register("password", {
+                    required: true,
+                  })}
+                  className={classNames({
+                    "ion-touched": touchedFields.password || !!submitCount,
+                    "ion-invalid": errors.password,
+                    "ion-valid": !errors.password,
+                  })}
+                  errorText="Invalid Password"
+                  onIonChange={(e) => register("password").onChange(e)}
                 />
-              </IonItem>
-            </IonList>
+              </IonCardContent>
+            </IonCard>
           </div>
-          <div>
-            <IonButton className="ion-margin-top" type="submit" expand="block">
+          <div className="ion-padding-horizontal">
+            <IonButton
+              disabled={isSubmitting}
+              form={LOGIN_PAGE_FORM_ID}
+              className="ion-margin-top "
+              type="submit"
+              expand="block"
+            >
               Login
             </IonButton>
             <IonButton
+              disabled={isSubmitting}
               color="light"
               className="ion-margin-top"
               expand="block"

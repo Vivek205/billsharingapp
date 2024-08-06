@@ -1,0 +1,1 @@
+export const SIGNUP_PAGE_FORM_ID = "signup-form";

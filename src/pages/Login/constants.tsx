@@ -1,0 +1,1 @@
+export const LOGIN_PAGE_FORM_ID = "login-form";

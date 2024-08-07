@@ -24,9 +24,11 @@ import { BANK_DETAILS_PAGE_FORM_ID } from "./constants";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BankDetailsFormInputs } from "./types";
 import classNames from "classnames";
+import { UseAppToast } from "../../utils/hooks/useAppToast";
 
 export const BankDetails = () => {
   const { user } = useFirebaseContext();
+  const [present] = UseAppToast();
   const {
     register,
     handleSubmit,
@@ -57,17 +59,14 @@ export const BankDetails = () => {
     accountName,
     iban,
   }) => {
-    console.log("start saving bank details");
+    if (!user?.uid) return;
 
-    if (user?.uid) {
-      try {
-        await setBankDetails({ accountName, iban }, user?.uid);
-        console.log("bank details saved");
-      } catch (error) {
-        console.log("error in saving bank details", error);
-      }
-    } else {
-      console.log("user not found in bank details");
+    try {
+      await setBankDetails({ accountName, iban }, user?.uid);
+      present("Bank details updated", "success");
+    } catch (error) {
+      present("Error updating bank details. Please try again");
+      console.log("error in saving bank details", error);
     }
   };
 

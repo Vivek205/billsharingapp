@@ -12,7 +12,7 @@ import {
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
-import React, { useState } from "react";
+import React from "react";
 import { Routes } from "../../Routes";
 import { logoGoogle } from "ionicons/icons";
 import {
@@ -25,12 +25,11 @@ import { SignupFormInputs } from "./types";
 import { SubmitHandler, useForm } from "react-hook-form";
 import classNames from "classnames";
 import { SIGNUP_PAGE_FORM_ID } from "./constants";
+import { UseAppToast } from "../../utils/hooks/useAppToast";
 
 export const Signup: React.FC = () => {
   const router = useIonRouter();
-  // TODO: Replace with react form
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [present] = UseAppToast();
 
   const {
     register,
@@ -49,8 +48,8 @@ export const Signup: React.FC = () => {
       await signupWithPassword(email, password);
       router.push(Routes.Home, "forward");
     } catch (error) {
-      // TODO: Replace alert with toast
-      window.alert?.(error.message);
+      present("Failed to signup. Please try again");
+      console.log("error in signup", error);
     }
   };
 

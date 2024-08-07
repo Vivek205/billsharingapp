@@ -26,10 +26,12 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { LoginFormInputs } from "./types";
 import classNames from "classnames";
 import { LOGIN_PAGE_FORM_ID } from "./constants";
+import { UseAppToast } from "../../utils/hooks/useAppToast";
 
 export const Login: React.FC = () => {
   const router = useIonRouter();
   const { state } = useLocation<{ path?: string }>();
+  const [present] = UseAppToast();
   const {
     register,
     handleSubmit,
@@ -52,9 +54,8 @@ export const Login: React.FC = () => {
         router.push(Routes.Home, "root");
       }
     } catch (error) {
-      // TODO: Replace alert with toast
+      present("Failed to login. Please try again");
       console.log("error in password signin", error);
-      window.alert?.(error.message);
     }
   };
 

@@ -71,8 +71,7 @@
   "description": "An Ionic project",
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "npm run lint:fix",
-      "git add"
+      "npm run lint:fix"
     ]
   }
 }

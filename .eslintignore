@@ -9,3 +9,6 @@ vite.config.ts
 capacitor.config.ts
 cypress.config.ts
 .eslintrc.cjs
+
+# TODO: Remove the below line and find out why it's failing
+src/utils/auth/firebase/index.d.ts

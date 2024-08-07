@@ -9,10 +9,11 @@
     "preview": "vite preview",
     "test.e2e": "cypress run",
     "test.unit": "vitest",
-    "lint": "eslint src",
-    "lint:fix": "eslint --fix src",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
     "start": "ionic serve",
-    "start:local-network": "ionic serve --host=0.0.0.0 --ssl"
+    "start:local-network": "ionic serve --host=0.0.0.0 --ssl",
+    "prepare": "husky"
   },
   "dependencies": {
     "@capacitor-firebase/authentication": "^6.1.0",
@@ -59,11 +60,19 @@
     "eslint": "^8.35.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-unused-imports": "^3.0.0",
+    "husky": "^9.1.4",
     "jsdom": "^22.1.0",
+    "lint-staged": "^15.2.8",
     "terser": "^5.4.0",
     "typescript": "~5.1.6",
     "vite": "^5.0.0",
     "vitest": "^0.34.6"
   },
-  "description": "An Ionic project"
+  "description": "An Ionic project",
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "npm run lint:fix",
+      "git add"
+    ]
+  }
 }

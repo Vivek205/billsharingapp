@@ -1,0 +1,1 @@
+export const BANK_DETAILS_PAGE_FORM_ID = "bank-details-form";

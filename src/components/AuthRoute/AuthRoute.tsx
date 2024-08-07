@@ -16,7 +16,7 @@ export const AuthRoute: FC<ComponentProps<typeof Route>> = ({
   if (isLoading) {
     return (
       <div className="animation-container">
-        <Lottie animationData={unlockAnimation} height={50} width={50} />{" "}
+        <Lottie animationData={unlockAnimation} height={50} width={50} />
       </div>
     );
   }

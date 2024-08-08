@@ -9,14 +9,17 @@ import "./PrivateRoute.css";
 
 export const PrivateRoute: FC<ComponentProps<typeof Route>> = ({
   children,
+  component,
   ...rest
 }) => {
   const { user, isLoading } = useFirebaseContext();
 
+  console.log("rest props", rest);
+
   if (isLoading) {
     return (
       <div className="animation-container">
-        <Lottie animationData={unlockAnimation} height={50} width={50} />{" "}
+        <Lottie animationData={unlockAnimation} height={50} width={50} />
       </div>
     );
   }
@@ -34,5 +37,9 @@ export const PrivateRoute: FC<ComponentProps<typeof Route>> = ({
     );
   }
 
-  return <Route {...rest}>{children}</Route>;
+  return (
+    <Route {...rest} component={component}>
+      {children}
+    </Route>
+  );
 };

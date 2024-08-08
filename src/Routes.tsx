@@ -4,6 +4,7 @@ export const Routes = {
   ItemsReview: "/items-review",
   Login: "/login",
   ReadingReceipt: "/reading-receipt",
+  ReceiptDetails: "/receipt-details/:receiptId",
   Root: "/",
   SharePaymentLink: "/share-payment-link",
   Signup: "/signup",

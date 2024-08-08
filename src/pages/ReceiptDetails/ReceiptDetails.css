@@ -1,0 +1,7 @@
+.action-buttons {
+  display: flex;
+  /* grid-template-columns: 1fr 1fr; */
+  gap: 10px;
+  width: 100%;
+  justify-content: end;
+}

@@ -17,6 +17,7 @@ import { ItemsReview } from "./pages/ItemsReview";
 import { SharePaymentLink } from "./pages/SharePaymentLink";
 import { ReceiptProcessingProvider } from "./utils/receiptProcessing";
 import { AuthRoute } from "./components/AuthRoute/AuthRoute";
+import { ReceiptDetails } from "./pages/ReceiptDetails";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -80,6 +81,11 @@ const App: React.FC = () => (
           <PrivateRoute exact path={Routes.BankDetails}>
             <BankDetails />
           </PrivateRoute>
+          <PrivateRoute
+            component={ReceiptDetails}
+            exact
+            path={Routes.ReceiptDetails}
+          />
           <Route exact path={Routes.Root}>
             <Redirect to={Routes.Login} />
           </Route>

@@ -1,1 +1,6 @@
-export { setReceipt, getReceiptsByIds, updateReceipt } from "./receipt";
+export {
+  setReceipt,
+  getReceipt,
+  getReceiptsByIds,
+  updateReceipt,
+} from "./receipt";

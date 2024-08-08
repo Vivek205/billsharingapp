@@ -25,6 +25,13 @@ export const setReceipt = async (
   return id;
 };
 
+export const getReceipt = async (id: string) => {
+  const { snapshot } = await FirebaseFirestore.getDocument<Receipt>({
+    reference: `${COLLECTION_NAME}/${id}`,
+  });
+  return snapshot.data;
+};
+
 export const getReceiptsByIds = async (receiptIds: string[]) => {
   const documentPromises = receiptIds.map((id) =>
     FirebaseFirestore.getDocument<Receipt>({

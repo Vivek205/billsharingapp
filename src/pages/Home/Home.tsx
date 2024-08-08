@@ -120,6 +120,9 @@ export const Home: React.FC = () => {
         </IonHeader>
         <IonContent className="ion-padding">
           <IonList>
+            {/* 
+            // TODO: Add the toggle for the dark mode https://ionicframework.com/docs/theming/dark-mode
+            */}
             <IonItem onClick={handleLogout}>
               <IonIcon icon={logOut} slot="start" />
               <IonLabel>Logout</IonLabel>
@@ -148,7 +151,11 @@ export const Home: React.FC = () => {
           <IonList className="ion-margin-top">
             {userReceipts.length > 0 ? (
               userReceipts.map((receipt) => (
-                <IonItem button key={receipt.id}>
+                <IonItem
+                  href={Routes.ReceiptDetails.replace(":receiptId", receipt.id)}
+                  key={receipt.id}
+                  routerDirection="forward"
+                >
                   <IonAvatar slot="start">
                     <img alt="receipt" src={receipt.imageUrl} />
                   </IonAvatar>

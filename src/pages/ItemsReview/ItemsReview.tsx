@@ -56,11 +56,13 @@ export const ItemsReview: React.FC = () => {
           <IonButtons slot="start">
             <IonBackButton defaultHref={Routes.Home} />
           </IonButtons>
-          <IonTitle>ItemsReview</IonTitle>
+          <IonTitle>Items Review</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
-        {/* TODO: Show the list of items. Edit options for checkboxes, and qty, add missing items, delete wrong items */}
+      <IonContent>
+        {/* 
+        // TODO: Show the list of items. Edit options for checkboxes, and qty, add missing items, delete wrong items 
+        */}
         {parsedJson && (
           <IonList>
             <IonItem color="medium">

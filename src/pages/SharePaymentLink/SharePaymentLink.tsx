@@ -2,6 +2,8 @@ import {
   IonBackButton,
   IonButton,
   IonButtons,
+  IonCard,
+  IonCardContent,
   IonContent,
   IonFooter,
   IonHeader,
@@ -10,19 +12,33 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { Routes } from "../../Routes";
 import { useNativeShare } from "../../utils/hooks/useNativeShare";
+import { updateReceipt } from "../../utils/database/firestore";
+import { useReceiptProcessingContext } from "../../utils/receiptProcessing";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { SharePaymentLinkFormInputs } from "./types";
+import { SHARE_PAYMENT_LINK_PAGE_FORM_ID } from "./constants";
 
 export const SharePaymentLink: FC = () => {
-  const [receiptTitle, setReceiptTitle] = useState("");
+  const { receiptId } = useReceiptProcessingContext();
   const { share } = useNativeShare();
-  const handleShare = async () => {
+  const { register, handleSubmit } = useForm<SharePaymentLinkFormInputs>({
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+  });
+  const handleShare: SubmitHandler<SharePaymentLinkFormInputs> = async ({
+    receiptTitle,
+  }) => {
     // TODO: Share the link with the user
     const validTill = new Date();
     validTill.setDate(validTill.getDate() + 7);
 
     try {
+      if (receiptId) {
+        await updateReceipt(receiptId, { description: receiptTitle });
+      }
       await share({
         title: receiptTitle,
         text: `Hey! I've shared a payment link with you. 
@@ -48,15 +64,29 @@ export const SharePaymentLink: FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <IonInput
-          onIonChange={(e) => setReceiptTitle(e.detail.value!)}
-          placeholder="What is this receipt for?"
-          value={receiptTitle}
-        />
+        <form
+          id={SHARE_PAYMENT_LINK_PAGE_FORM_ID}
+          noValidate
+          onSubmit={handleSubmit(handleShare)}
+        >
+          <IonCard>
+            <IonCardContent>
+              <IonInput
+                placeholder="What is this receipt for?"
+                {...register("receiptTitle", {
+                  minLength: 5,
+                })}
+                onIonChange={(e) => register("receiptTitle").onChange(e)}
+              />
+            </IonCardContent>
+          </IonCard>
+        </form>
       </IonContent>
       <IonFooter className="ion-padding-bottom">
         <div className="ion-text-center">
-          <IonButton onClick={handleShare}>share</IonButton>
+          <IonButton form={SHARE_PAYMENT_LINK_PAGE_FORM_ID} type="submit">
+            share
+          </IonButton>
         </div>
       </IonFooter>
     </IonPage>

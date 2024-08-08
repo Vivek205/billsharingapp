@@ -18,7 +18,10 @@ import {
 } from "@ionic/react";
 import { add, camera, logOut } from "ionicons/icons";
 import { usePhotoGallery } from "../../utils/hooks/usePhotoGallery";
-import { useReceiptProcessingContext } from "../../utils/receiptProcessing";
+import {
+  convertUriToBase64,
+  useReceiptProcessingContext,
+} from "../../utils/receiptProcessing";
 import { Routes } from "../../Routes";
 import { HOME_PAGE_MENU_ID } from "./constants";
 import { signout, useFirebaseContext } from "../../utils/auth/firebase";
@@ -26,13 +29,19 @@ import { signout, useFirebaseContext } from "../../utils/auth/firebase";
 import "./Home.css";
 import { UseAppToast } from "../../utils/hooks/useAppToast";
 import { useEffect, useState } from "react";
-import { getUserReceipts, Receipt } from "../../utils/database/firestore";
-import { getReceiptsByIds } from "../../utils/database/firestore/receipts/receipt";
+import {
+  getReceiptsByIds,
+  getUserReceipts,
+  Receipt,
+} from "../../utils/database/firestore";
+import { Capacitor } from "@capacitor/core";
+import { CapturedReceipt } from "../../utils/receiptProcessing/types";
 
 export const Home: React.FC = () => {
   const { takePhoto } = usePhotoGallery();
   const router = useIonRouter();
-  const { setRawImage } = useReceiptProcessingContext();
+  const { setCapturedReceipt: setCapturedReceipt } =
+    useReceiptProcessingContext();
   const [present] = UseAppToast();
   const { user } = useFirebaseContext();
   const [userReceipts, setUserReceipts] = useState<Receipt[]>([]);
@@ -55,9 +64,21 @@ export const Home: React.FC = () => {
     try {
       const receiptImage = await takePhoto();
 
-      if (!receiptImage?.base64String) return;
+      const image: CapturedReceipt = {
+        uri: receiptImage?.path,
+        webPath: receiptImage?.webPath,
+        base64String: receiptImage?.base64String,
+      };
 
-      setRawImage(receiptImage.base64String);
+      if (Capacitor.isNativePlatform()) {
+        image.base64String = await convertUriToBase64(
+          receiptImage?.webPath as string
+        );
+      }
+
+      if (!image) return;
+
+      setCapturedReceipt(image);
 
       // TODO: Remove the below line
       return router.push(Routes.ReadingReceipt, "forward");

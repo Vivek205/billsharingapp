@@ -1,8 +1,15 @@
+export type CapturedReceipt = {
+  uri?: string;
+  base64String?: string;
+  webPath?: string;
+};
 export type ReceiptProcessingContextType = {
-  rawImage: string;
+  receiptId?: string;
+  setReceiptId: (receiptId: string) => void;
+  capturedReceipt: CapturedReceipt;
   // TODO: Define the type of the processed receipt json
   imageJsonString?: string;
-  setRawImage: (rawImage: string) => void;
+  setCapturedReceipt: (rawImage: CapturedReceipt) => void;
   setImageJsonString: (imageJsonString: string) => void;
 };
 

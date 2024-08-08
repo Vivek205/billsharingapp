@@ -41,3 +41,10 @@ export const getReceiptsByIds = async (receiptIds: string[]) => {
   console.log("documents");
   return documents.filter((doc) => doc !== null);
 };
+
+export const updateReceipt = async (id: string, receipt: Partial<Receipt>) => {
+  FirebaseFirestore.updateDocument({
+    reference: `${COLLECTION_NAME}/${id}`,
+    data: receipt,
+  });
+};

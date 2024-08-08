@@ -15,10 +15,11 @@ export const setUser = (user: UserDetails) => {
 };
 
 export const getUserReceipts = async (userId: string) => {
+  console.log("getting receipts for user",userId);
   const { snapshot } = await FirebaseFirestore.getDocument<UserDetails>({
     reference: `${COLLECTION_NAME}/${userId}`,
   });
-
+  console.log("snapshot",snapshot);
   return snapshot.data?.receiptIds;
 };
 

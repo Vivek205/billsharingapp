@@ -52,3 +52,8 @@ Add the following keys to the Info.plist file
   pod 'CapacitorFirebaseAuthentication/Google', :path => '../../node_modules/@capacitor-firebase/authentication'
   pod 'CapacitorFirebaseFirestore', :path => '../../node_modules/@capacitor-firebase/firestore'
 ```
+
+
+### To Use Filsystem
+
+Add these configurations https://capacitorjs.com/docs/apis/filesystem

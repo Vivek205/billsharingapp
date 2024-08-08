@@ -27,29 +27,34 @@ import {
 
 export const ReadingReceipt: React.FC = () => {
   const router = useIonRouter();
-  const { rawImage, setImageJsonString } = useReceiptProcessingContext();
+  const {
+    capturedReceipt: capturedReceipt,
+    setImageJsonString,
+    setReceiptId,
+  } = useReceiptProcessingContext();
   const [present] = UseAppToast();
   const { user } = useFirebaseContext();
 
   const handleRawImage = async () => {
     try {
       if (!user?.uid) return;
+      console.log("fetching details for the user", user.uid);
+
       const [receiptFilePath, imageJsonString, userReceipts] =
         await Promise.all([
-          uploadReceiptFile(user.uid, rawImage),
-          convertReceiptImageToJson(rawImage),
-          // TODO: Get User details once and save it in the Context
+          uploadReceiptFile(user.uid, capturedReceipt),
+          convertReceiptImageToJson(capturedReceipt.base64String as string),
           getUserReceipts(user.uid),
         ]);
 
       if (receiptFilePath) {
-        const receipt = await setReceipt(
+        const newReceiptId = await setReceipt(
           user.uid,
           receiptFilePath,
           imageJsonString
         );
-
-        await setUserReceipt(user.uid, [...(userReceipts || []), receipt]);
+        setReceiptId(newReceiptId);
+        await setUserReceipt(user.uid, [...(userReceipts || []), newReceiptId]);
       }
 
       setImageJsonString(imageJsonString);
@@ -57,20 +62,20 @@ export const ReadingReceipt: React.FC = () => {
       // TODO: Handle Error
       router.push(Routes.ItemsReview, "root");
     } catch (error) {
-      present("Unable to read the receipt");
+      present(`"Unable to read the receipt" ${error.message}`);
       console.log("error in reading receipt", error);
-      router.goBack();
+      // router.goBack();
     }
   };
 
   useEffect(() => {
-    if (!rawImage) {
+    if (!capturedReceipt) {
       console.log("Raw image missing. Check the Context");
       alert("Raw image missing. Check the Context");
       router.goBack();
     }
     handleRawImage();
-  }, [rawImage]);
+  }, [capturedReceipt]);
 
   return (
     <IonPage>

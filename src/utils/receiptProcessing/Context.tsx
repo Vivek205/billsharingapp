@@ -1,17 +1,20 @@
 import { createContext, FC, ReactNode, useContext, useState } from "react";
-import { ReceiptProcessingContextType } from "./types";
+import { CapturedReceipt, ReceiptProcessingContextType } from "./types";
 
 const ReceiptProcessingContext = createContext<ReceiptProcessingContextType>({
-  rawImage: "",
+  receiptId: undefined,
+  setReceiptId: () => {},
+  capturedReceipt: {},
   imageJsonString: undefined,
-  setRawImage: () => {},
+  setCapturedReceipt: () => {},
   setImageJsonString: () => {},
 });
 
 export const ReceiptProcessingProvider: FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [rawImage, setRawImage] = useState("");
+  const [receiptId, setReceiptId] = useState<string | undefined>(undefined);
+  const [capturedReceipt, setCapturedReceipt] = useState<CapturedReceipt>({});
   const [imageJsonString, setImageJsonString] = useState<string | undefined>(
     undefined
   );
@@ -19,9 +22,11 @@ export const ReceiptProcessingProvider: FC<{ children: ReactNode }> = ({
   return (
     <ReceiptProcessingContext.Provider
       value={{
-        rawImage,
+        receiptId,
+        setReceiptId,
+        capturedReceipt: capturedReceipt,
         imageJsonString,
-        setRawImage,
+        setCapturedReceipt,
         setImageJsonString,
       }}
     >

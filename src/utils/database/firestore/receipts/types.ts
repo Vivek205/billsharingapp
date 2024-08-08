@@ -4,4 +4,5 @@ export type Receipt = {
   jsonData: string;
   userId: string;
   createdAt: number;
+  description?: string;
 };

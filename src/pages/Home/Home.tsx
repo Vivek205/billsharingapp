@@ -14,6 +14,7 @@ import {
   IonMenu,
   IonMenuButton,
   IonPage,
+  IonSkeletonText,
   IonText,
   IonTitle,
   IonToggle,
@@ -51,14 +52,20 @@ export const Home: React.FC = () => {
   const [present] = UseAppToast();
   const { user } = useFirebaseContext();
   const [userReceipts, setUserReceipts] = useState<Receipt[]>([]);
+  const [fetchingUserReceipts, setFetchingUserReceipts] = useState(false);
   const { isDarkModeEnabled, toggleDarkMode } = useDarkModeContext();
 
   const getUserReceiptDetails = async (userId: string) => {
-    const receiptIds = await getUserReceipts(userId);
-    console.log("receipt ids", receiptIds);
-    if (!receiptIds) return;
-    const receipts = await getReceiptsByIds(receiptIds);
-    setUserReceipts(receipts);
+    try {
+      setFetchingUserReceipts(true);
+      const receiptIds = await getUserReceipts(userId);
+      console.log("receipt ids", receiptIds);
+      if (!receiptIds) return;
+      const receipts = await getReceiptsByIds(receiptIds);
+      setUserReceipts(receipts);
+    } finally {
+      setFetchingUserReceipts(false);
+    }
   };
 
   useEffect(() => {
@@ -164,33 +171,56 @@ export const Home: React.FC = () => {
             </IonCardContent>
           </IonCard>
           <IonList className="ion-margin-top">
-            {userReceipts.length > 0 ? (
-              userReceipts.map((receipt) => (
-                <IonItem
-                  key={receipt.id}
-                  routerDirection="none"
-                  routerLink={Routes.ReceiptDetails.replace(
-                    ":receiptId",
-                    receipt.id
-                  )}
-                >
+            {fetchingUserReceipts &&
+              [1, 2, 3].map((item) => (
+                <IonItem key={item}>
                   <IonAvatar slot="start">
-                    <img alt="receipt" src={receipt.imageUrl} />
+                    <IonSkeletonText animated={true}></IonSkeletonText>
                   </IonAvatar>
                   <IonLabel>
-                    <h3>{receipt.title}</h3>
-                    <p> {formatEpoch(receipt.createdAt)}</p>
+                    <h3>
+                      <IonSkeletonText
+                        animated={true}
+                        style={{ width: "80%" }}
+                      ></IonSkeletonText>
+                    </h3>
+                    <p>
+                      <IonSkeletonText
+                        animated={true}
+                        style={{ width: "60%" }}
+                      ></IonSkeletonText>
+                    </p>
                   </IonLabel>
                 </IonItem>
-              ))
-            ) : (
-              <IonItem>
-                <IonLabel>
-                  No expenses yet. Capture a receipt to start splitting the
-                  bills
-                </IonLabel>
-              </IonItem>
-            )}
+              ))}
+            {!fetchingUserReceipts &&
+              (userReceipts.length > 0 ? (
+                userReceipts.map((receipt) => (
+                  <IonItem
+                    key={receipt.id}
+                    routerDirection="none"
+                    routerLink={Routes.ReceiptDetails.replace(
+                      ":receiptId",
+                      receipt.id
+                    )}
+                  >
+                    <IonAvatar slot="start">
+                      <img alt="receipt" src={receipt.imageUrl} />
+                    </IonAvatar>
+                    <IonLabel>
+                      <h3>{receipt.title}</h3>
+                      <p> {formatEpoch(receipt.createdAt)}</p>
+                    </IonLabel>
+                  </IonItem>
+                ))
+              ) : (
+                <IonItem>
+                  <IonLabel>
+                    No expenses yet. Capture a receipt to start splitting the
+                    bills
+                  </IonLabel>
+                </IonItem>
+              ))}
           </IonList>
         </IonContent>
         <IonFooter>

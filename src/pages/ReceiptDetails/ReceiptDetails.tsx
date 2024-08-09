@@ -19,26 +19,31 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  useIonRouter,
 } from "@ionic/react";
 import { FC, useEffect, useState } from "react";
-import { getReceipt, Receipt } from "../../utils/database/firestore";
+import {
+  getReceipt,
+  Receipt,
+  updateReceipt,
+} from "../../utils/database/firestore";
 import { ParsedReceipt } from "../../utils/receiptProcessing";
-import { ReceiptDetailsProps } from "./types";
+import { ReceiptDetailsProps, ReceiptDetailsUrlParams } from "./types";
 import { Routes } from "../../Routes";
 import { formatEpoch } from "../../utils/formatEpoch";
 
 import "./ReceiptDetails.css";
-import { trash } from "ionicons/icons";
+import { checkmarkOutline, shareOutline, trash } from "ionicons/icons";
 import { useParams } from "react-router-dom";
+import { UseAppToast } from "../../utils/hooks/useAppToast";
+import { useNativeShare } from "../../utils/hooks/useNativeShare";
 
 export const ReceiptDetails: FC<ReceiptDetailsProps> = ({ match }) => {
-  const router = useIonRouter();
-  console.log("router", router);
-  const params = useParams();
-  console.log("params", params);
-  const { receiptId } = router.routeInfo.params ?? {};
+  const params = useParams<ReceiptDetailsUrlParams>();
+
+  const { receiptId } = params;
   const [receipt, setReceipt] = useState<Receipt | null>(null);
+  const [present] = UseAppToast();
+  const { share } = useNativeShare();
 
   const fetchReceiptDetails = async () => {
     console.log("fetching receipt details");
@@ -63,6 +68,37 @@ export const ReceiptDetails: FC<ReceiptDetailsProps> = ({ match }) => {
       </IonContent>
     </IonPage>;
   }
+
+  const handleConfirm = async () => {
+    try {
+      console.log("handle confirm", receiptId);
+      if (!receiptId) return;
+      await updateReceipt(receiptId as string, { isConfirmed: true });
+      await fetchReceiptDetails();
+      present("Items confirmed", "success");
+    } catch (error) {
+      present(`Error confirming the receipt ${error.message}`);
+    }
+  };
+
+  const handleShare = async () => {
+    // TODO: Replace the validTill with the correct date
+    const validTill = new Date();
+    validTill.setDate(validTill.getDate() + 7);
+    try {
+      if (!receiptId) return;
+      await share({
+        title: receipt?.title,
+        text: `Hey! I've shared a payment link with you. 
+        You can select the items intended for you and complete your payment. 
+        Hurry, it's valid until ${validTill.toLocaleDateString()}! 
+        Check it out: https://www.google.com`,
+        url: "https://www.google.com",
+      });
+    } catch (error) {
+      present(`Error sharing the receipt ${error.message}`);
+    }
+  };
   return (
     <IonPage>
       <IonHeader>
@@ -112,10 +148,17 @@ export const ReceiptDetails: FC<ReceiptDetailsProps> = ({ match }) => {
       <IonFooter>
         <IonToolbar>
           <div className="ion-text-center">
-            {/* <IonButton color="danger" fill="outline">
-              Delete
-            </IonButton> */}
-            <IonButton fill="solid">Share</IonButton>
+            <IonButton
+              color={receipt?.isConfirmed ? "primary" : "secondary"}
+              fill="solid"
+              onClick={receipt?.isConfirmed ? handleShare : handleConfirm}
+            >
+              <IonIcon
+                icon={receipt?.isConfirmed ? shareOutline : checkmarkOutline}
+                slot="start"
+              />
+              {receipt?.isConfirmed ? "Share" : "Confirm"}
+            </IonButton>
           </div>
         </IonToolbar>
       </IonFooter>

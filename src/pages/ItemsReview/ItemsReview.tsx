@@ -19,10 +19,13 @@ import {
   ParsedReceipt,
   useReceiptProcessingContext,
 } from "../../utils/receiptProcessing";
+import { updateReceipt } from "../../utils/database/firestore";
+import { UseAppToast } from "../../utils/hooks/useAppToast";
 
 export const ItemsReview: React.FC = () => {
   const router = useIonRouter();
-  const { imageJsonString } = useReceiptProcessingContext();
+  const { imageJsonString, receiptId } = useReceiptProcessingContext();
+  const [present] = UseAppToast();
 
   useEffect(() => {
     if (!imageJsonString) {
@@ -32,7 +35,13 @@ export const ItemsReview: React.FC = () => {
   }, [imageJsonString]);
 
   const handleConfirm = async () => {
-    return router.push(Routes.SharePaymentLink, "forward");
+    try {
+      if (!receiptId) return;
+      await updateReceipt(receiptId, { isConfirmed: true });
+      return router.push(Routes.SharePaymentLink, "forward");
+    } catch (error) {
+      present(`Error confirming the receipt ${error.message}`);
+    }
   };
 
   const parsedJson = useMemo<ParsedReceipt | undefined>(() => {
@@ -59,7 +68,7 @@ export const ItemsReview: React.FC = () => {
           <IonTitle>Items Review</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent>
+      <IonContent className="ion-padding">
         {/* 
         // TODO: Show the list of items. Edit options for checkboxes, and qty, add missing items, delete wrong items 
         */}

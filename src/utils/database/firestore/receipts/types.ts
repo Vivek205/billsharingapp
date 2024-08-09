@@ -1,8 +1,9 @@
 export type Receipt = {
+  createdAt: number;
   id: string;
   imageUrl: string;
+  isConfirmed?: boolean;
   jsonData: string;
-  userId: string;
-  createdAt: number;
   title?: string;
+  userId: string;
 };

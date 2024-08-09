@@ -31,7 +31,7 @@ export const SharePaymentLink: FC = () => {
   const handleShare: SubmitHandler<SharePaymentLinkFormInputs> = async ({
     receiptTitle,
   }) => {
-    // TODO: Share the link with the user
+    // TODO: Replace the validTill with the correct date
     const validTill = new Date();
     validTill.setDate(validTill.getDate() + 7);
 

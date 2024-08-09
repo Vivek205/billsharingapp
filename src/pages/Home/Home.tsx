@@ -2,6 +2,8 @@ import {
   IonAvatar,
   IonButton,
   IonButtons,
+  IonCard,
+  IonCardContent,
   IonContent,
   IonFooter,
   IonHeader,
@@ -12,12 +14,13 @@ import {
   IonMenu,
   IonMenuButton,
   IonPage,
+  IonText,
   IonTitle,
   IonToggle,
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
-import { add, camera, logOut } from "ionicons/icons";
+import { camera, logOut } from "ionicons/icons";
 import { usePhotoGallery } from "../../utils/hooks/usePhotoGallery";
 import {
   convertUriToBase64,
@@ -38,6 +41,7 @@ import {
 import { Capacitor } from "@capacitor/core";
 import { CapturedReceipt } from "../../utils/receiptProcessing/types";
 import { useDarkModeContext } from "../../utils/hooks/useDarkMode";
+import { formatEpoch } from "../../utils/formatEpoch";
 
 export const Home: React.FC = () => {
   const { takePhoto } = usePhotoGallery();
@@ -149,17 +153,16 @@ export const Home: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <IonContent className="ion-padding">
-          <IonItem color="light">
-            <IonLabel>
-              Enter your bank details to start receiving payments
-            </IonLabel>
-            <IonButton onClick={redirectToBankDetails}>
-              <IonIcon icon={add} slot="icon-only" />
-            </IonButton>
-          </IonItem>
-          <IonItem routerLink={`${Routes.Test.replace(":id", "123")}?qry=123`}>
-            Navigate to test
-          </IonItem>
+          <IonCard>
+            <IonCardContent>
+              <IonText>
+                <p>Enter your bank details to start receiving payments</p>
+              </IonText>
+              <IonButton fill="clear" onClick={redirectToBankDetails}>
+                Add
+              </IonButton>
+            </IonCardContent>
+          </IonCard>
           <IonList className="ion-margin-top">
             {userReceipts.length > 0 ? (
               userReceipts.map((receipt) => (
@@ -170,12 +173,14 @@ export const Home: React.FC = () => {
                     ":receiptId",
                     receipt.id
                   )}
-                  // onClick={() => router.push(Routes.ReceiptDetails.replace(":receiptId", receipt.id))}
                 >
                   <IonAvatar slot="start">
                     <img alt="receipt" src={receipt.imageUrl} />
                   </IonAvatar>
-                  {receipt.createdAt}
+                  <IonLabel>
+                    <h3>{receipt.title}</h3>
+                    <p> {formatEpoch(receipt.createdAt)}</p>
+                  </IonLabel>
                 </IonItem>
               ))
             ) : (

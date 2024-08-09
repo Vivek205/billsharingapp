@@ -63,6 +63,11 @@ export const Signup: React.FC = () => {
     }
   };
 
+  const goToLogin = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    router.push(Routes.Login, "forward");
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -143,7 +148,7 @@ export const Signup: React.FC = () => {
         </form>
         <IonText className="ion-text-center ion-padding-top">
           <p>
-            Already registered? <a href={Routes.Login}>Log in</a>
+            Already registered? <a onClick={goToLogin}>Log in</a>
           </p>
         </IonText>
       </IonContent>

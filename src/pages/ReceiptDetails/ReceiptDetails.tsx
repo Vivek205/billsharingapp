@@ -8,7 +8,11 @@ import {
   IonCardSubtitle,
   IonCardTitle,
   IonContent,
+  IonFab,
+  IonFabButton,
+  IonFooter,
   IonHeader,
+  IonIcon,
   IonItem,
   IonLabel,
   IonList,
@@ -25,9 +29,14 @@ import { Routes } from "../../Routes";
 import { formatEpoch } from "../../utils/formatEpoch";
 
 import "./ReceiptDetails.css";
+import { trash } from "ionicons/icons";
+import { useParams } from "react-router-dom";
 
 export const ReceiptDetails: FC<ReceiptDetailsProps> = ({ match }) => {
   const router = useIonRouter();
+  console.log("router", router);
+  const params = useParams();
+  console.log("params", params);
   const { receiptId } = router.routeInfo.params ?? {};
   const [receipt, setReceipt] = useState<Receipt | null>(null);
 
@@ -64,11 +73,16 @@ export const ReceiptDetails: FC<ReceiptDetailsProps> = ({ match }) => {
           <IonTitle>Receipt</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
+      <IonContent>
+        <IonFab horizontal="end" slot="fixed" vertical="top">
+          <IonFabButton color="danger" size="small">
+            <IonIcon icon={trash} />
+          </IonFabButton>
+        </IonFab>
         <IonCard>
           <img alt="receipt" src={receipt?.imageUrl} />
           <IonCardHeader>
-            <IonCardTitle>{receipt?.description}</IonCardTitle>
+            <IonCardTitle>{receipt?.title}</IonCardTitle>
             <IonCardSubtitle>
               {formatEpoch(receipt?.createdAt ?? 0)}
             </IonCardSubtitle>
@@ -93,14 +107,18 @@ export const ReceiptDetails: FC<ReceiptDetailsProps> = ({ match }) => {
               </IonList>
             )}
           </IonCardContent>
-          <IonButtons className="ion-padding-horizontal ion-padding-bottom .action-buttons">
-            <IonButton color="danger" fill="outline">
-              Delete
-            </IonButton>
-            <IonButton fill="solid">Share</IonButton>
-          </IonButtons>
         </IonCard>
       </IonContent>
+      <IonFooter>
+        <IonToolbar>
+          <div className="ion-text-center">
+            {/* <IonButton color="danger" fill="outline">
+              Delete
+            </IonButton> */}
+            <IonButton fill="solid">Share</IonButton>
+          </div>
+        </IonToolbar>
+      </IonFooter>
     </IonPage>
   );
 };

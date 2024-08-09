@@ -57,3 +57,7 @@ Add the following keys to the Info.plist file
 ### To Use Filsystem
 
 Add these configurations https://capacitorjs.com/docs/apis/filesystem
+
+### Capacitory Preferences
+
+Create the privacy info file https://capacitorjs.com/docs/ios/privacy-manifest#manual-steps

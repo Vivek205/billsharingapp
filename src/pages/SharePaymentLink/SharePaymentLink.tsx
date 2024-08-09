@@ -37,7 +37,7 @@ export const SharePaymentLink: FC = () => {
 
     try {
       if (receiptId) {
-        await updateReceipt(receiptId, { description: receiptTitle });
+        await updateReceipt(receiptId, { title: receiptTitle });
       }
       await share({
         title: receiptTitle,
@@ -72,22 +72,28 @@ export const SharePaymentLink: FC = () => {
           <IonCard>
             <IonCardContent>
               <IonInput
+                autoFocus
+                enterkeyhint="go"
                 placeholder="What is this receipt for?"
                 {...register("receiptTitle", {
                   minLength: 5,
                 })}
+                counter
+                maxlength={18}
                 onIonChange={(e) => register("receiptTitle").onChange(e)}
               />
             </IonCardContent>
           </IonCard>
         </form>
       </IonContent>
-      <IonFooter className="ion-padding-bottom">
-        <div className="ion-text-center">
-          <IonButton form={SHARE_PAYMENT_LINK_PAGE_FORM_ID} type="submit">
-            share
-          </IonButton>
-        </div>
+      <IonFooter>
+        <IonToolbar>
+          <div className="ion-text-center">
+            <IonButton form={SHARE_PAYMENT_LINK_PAGE_FORM_ID} type="submit">
+              share
+            </IonButton>
+          </div>
+        </IonToolbar>
       </IonFooter>
     </IonPage>
   );

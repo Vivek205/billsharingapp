@@ -103,6 +103,7 @@ export const BankDetails = () => {
                   "ion-invalid": errors.accountName,
                   "ion-valid": !errors.accountName,
                 })}
+                enterkeyhint="next"
                 errorText="Invalid Account Name"
                 onIonChange={(e) => register("accountName").onChange(e)}
               />
@@ -120,6 +121,7 @@ export const BankDetails = () => {
                   "ion-invalid": errors.iban,
                   "ion-valid": !errors.iban,
                 })}
+                enterkeyhint="go"
                 errorText="Invalid IBAN"
                 onIonChange={(e) => register("iban").onChange(e)}
               />
@@ -132,18 +134,20 @@ export const BankDetails = () => {
           </p>
         </IonText>
       </IonContent>
-      <IonFooter className="ion-padding-bottom">
-        {isSubmitting && <IonProgressBar type="indeterminate" />}
-        <div className="ion-text-center ion-padding-top">
-          <IonButton
-            disabled={isSubmitting}
-            form={BANK_DETAILS_PAGE_FORM_ID}
-            type="submit"
-          >
-            <IonIcon icon={save} slot="start"></IonIcon>
-            Save
-          </IonButton>
-        </div>
+      <IonFooter>
+        <IonToolbar>
+          {isSubmitting && <IonProgressBar type="indeterminate" />}
+          <div className="ion-text-center ion-padding-top">
+            <IonButton
+              disabled={isSubmitting}
+              form={BANK_DETAILS_PAGE_FORM_ID}
+              type="submit"
+            >
+              <IonIcon icon={save} slot="start"></IonIcon>
+              Save
+            </IonButton>
+          </div>
+        </IonToolbar>
       </IonFooter>
     </IonPage>
   );

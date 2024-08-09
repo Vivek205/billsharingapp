@@ -111,6 +111,7 @@ export const Login: React.FC = () => {
                     "ion-invalid": errors.email,
                     "ion-valid": !errors.email,
                   })}
+                  enterkeyhint="next"
                   errorText="Invalid Email Id"
                   onIonChange={(e) => register("email").onChange(e)}
                 />
@@ -126,6 +127,7 @@ export const Login: React.FC = () => {
                     "ion-invalid": errors.password,
                     "ion-valid": !errors.password,
                   })}
+                  enterkeyhint="go"
                   errorText="Invalid Password"
                   onIonChange={(e) => register("password").onChange(e)}
                 />

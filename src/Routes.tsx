@@ -8,4 +8,5 @@ export const Routes = {
   Root: "/",
   SharePaymentLink: "/share-payment-link",
   Signup: "/signup",
+  Test: "/test/:id",
 };

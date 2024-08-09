@@ -1,4 +1,4 @@
-import { Redirect, Route } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { Home } from "./pages/Home";
@@ -43,11 +43,12 @@ import "@ionic/react/css/display.css";
  */
 
 /* import '@ionic/react/css/palettes/dark.always.css'; */
-/* import '@ionic/react/css/palettes/dark.class.css'; */
-import "@ionic/react/css/palettes/dark.system.css";
+import "@ionic/react/css/palettes/dark.class.css";
+/* import "@ionic/react/css/palettes/dark.system.css"; */
 
 /* Theme variables */
 import "./theme/variables.css";
+import { DarkModeProvider } from "./utils/darkMode";
 
 setupIonicReact();
 initializeFirebase();
@@ -58,37 +59,43 @@ const App: React.FC = () => (
     <FirebaseAuthProvider>
       <IonReactRouter>
         <IonRouterOutlet>
-          <AuthRoute exact path={Routes.Login}>
-            <Login />
-          </AuthRoute>
-          <AuthRoute exact path={Routes.Signup}>
-            <Signup />
-          </AuthRoute>
-          <ReceiptProcessingProvider>
-            <PrivateRoute exact path={Routes.Home}>
-              <Home />
-            </PrivateRoute>
-            <PrivateRoute exact path={Routes.ReadingReceipt}>
-              <ReadingReceipt />
-            </PrivateRoute>
-            <PrivateRoute exact path={Routes.ItemsReview}>
-              <ItemsReview />
-            </PrivateRoute>
-            <PrivateRoute exact path={Routes.SharePaymentLink}>
-              <SharePaymentLink />
-            </PrivateRoute>
-          </ReceiptProcessingProvider>
-          <PrivateRoute exact path={Routes.BankDetails}>
-            <BankDetails />
-          </PrivateRoute>
-          <PrivateRoute
-            component={ReceiptDetails}
-            exact
-            path={Routes.ReceiptDetails}
-          />
-          <Route exact path={Routes.Root}>
-            <Redirect to={Routes.Login} />
-          </Route>
+          <DarkModeProvider>
+            <ReceiptProcessingProvider>
+              <Switch>
+                <AuthRoute exact path={Routes.Login}>
+                  <Login />
+                </AuthRoute>
+                <AuthRoute exact path={Routes.Signup}>
+                  <Signup />
+                </AuthRoute>
+
+                <PrivateRoute exact path={Routes.Home}>
+                  <Home />
+                </PrivateRoute>
+                <PrivateRoute exact path={Routes.ReadingReceipt}>
+                  <ReadingReceipt />
+                </PrivateRoute>
+                <PrivateRoute exact path={Routes.ItemsReview}>
+                  <ItemsReview />
+                </PrivateRoute>
+                <PrivateRoute exact path={Routes.SharePaymentLink}>
+                  <SharePaymentLink />
+                </PrivateRoute>
+                <PrivateRoute exact path={Routes.BankDetails}>
+                  <BankDetails />
+                </PrivateRoute>
+                <PrivateRoute
+                  component={ReceiptDetails}
+                  exact
+                  path={Routes.ReceiptDetails}
+                />
+                <Route component={Home} exact path={Routes.Home} />
+                <Route exact path={Routes.Root}>
+                  <Redirect to={Routes.Login} />
+                </Route>
+              </Switch>
+            </ReceiptProcessingProvider>
+          </DarkModeProvider>
         </IonRouterOutlet>
       </IonReactRouter>
     </FirebaseAuthProvider>

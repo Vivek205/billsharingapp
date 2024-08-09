@@ -80,10 +80,12 @@ export const ItemsReview: React.FC = () => {
           </IonList>
         )}
       </IonContent>
-      <IonFooter className="ion-padding-bottom">
-        <div className="ion-text-center">
-          <IonButton onClick={handleConfirm}>Confirm</IonButton>
-        </div>
+      <IonFooter>
+        <IonToolbar>
+          <div className="ion-text-center">
+            <IonButton onClick={handleConfirm}>Confirm</IonButton>
+          </div>
+        </IonToolbar>
       </IonFooter>
     </IonPage>
   );

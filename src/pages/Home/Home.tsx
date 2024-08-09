@@ -13,6 +13,7 @@ import {
   IonMenuButton,
   IonPage,
   IonTitle,
+  IonToggle,
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
@@ -36,6 +37,7 @@ import {
 } from "../../utils/database/firestore";
 import { Capacitor } from "@capacitor/core";
 import { CapturedReceipt } from "../../utils/receiptProcessing/types";
+import { useDarkModeContext } from "../../utils/darkMode";
 
 export const Home: React.FC = () => {
   const { takePhoto } = usePhotoGallery();
@@ -45,6 +47,7 @@ export const Home: React.FC = () => {
   const [present] = UseAppToast();
   const { user } = useFirebaseContext();
   const [userReceipts, setUserReceipts] = useState<Receipt[]>([]);
+  const { isDarkModeEnabled, toggleDarkMode } = useDarkModeContext();
 
   const getUserReceiptDetails = async (userId: string) => {
     const receiptIds = await getUserReceipts(userId);
@@ -120,9 +123,15 @@ export const Home: React.FC = () => {
         </IonHeader>
         <IonContent className="ion-padding">
           <IonList>
-            {/* 
-            // TODO: Add the toggle for the dark mode https://ionicframework.com/docs/theming/dark-mode
-            */}
+            <IonItem>
+              <IonToggle
+                checked={isDarkModeEnabled}
+                justify="space-between"
+                onIonChange={toggleDarkMode}
+              >
+                Dark Mode
+              </IonToggle>
+            </IonItem>
             <IonItem onClick={handleLogout}>
               <IonIcon icon={logOut} slot="start" />
               <IonLabel>Logout</IonLabel>
@@ -148,13 +157,20 @@ export const Home: React.FC = () => {
               <IonIcon icon={add} slot="icon-only" />
             </IonButton>
           </IonItem>
+          <IonItem routerLink={`${Routes.Test.replace(":id", "123")}?qry=123`}>
+            Navigate to test
+          </IonItem>
           <IonList className="ion-margin-top">
             {userReceipts.length > 0 ? (
               userReceipts.map((receipt) => (
                 <IonItem
-                  href={Routes.ReceiptDetails.replace(":receiptId", receipt.id)}
                   key={receipt.id}
-                  routerDirection="forward"
+                  routerDirection="none"
+                  routerLink={Routes.ReceiptDetails.replace(
+                    ":receiptId",
+                    receipt.id
+                  )}
+                  // onClick={() => router.push(Routes.ReceiptDetails.replace(":receiptId", receipt.id))}
                 >
                   <IonAvatar slot="start">
                     <img alt="receipt" src={receipt.imageUrl} />
@@ -172,13 +188,15 @@ export const Home: React.FC = () => {
             )}
           </IonList>
         </IonContent>
-        <IonFooter className="ion-margin-bottom">
-          <div className="ion-text-center">
-            <IonButton onClick={handleCapture}>
-              <IonIcon icon={camera} slot="start"></IonIcon>
-              Capture Receipt
-            </IonButton>
-          </div>
+        <IonFooter>
+          <IonToolbar>
+            <div className="ion-text-center">
+              <IonButton onClick={handleCapture}>
+                <IonIcon icon={camera} slot="start"></IonIcon>
+                Capture Receipt
+              </IonButton>
+            </div>
+          </IonToolbar>
         </IonFooter>
       </IonPage>
     </>

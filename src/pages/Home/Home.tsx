@@ -37,7 +37,7 @@ import {
 } from "../../utils/database/firestore";
 import { Capacitor } from "@capacitor/core";
 import { CapturedReceipt } from "../../utils/receiptProcessing/types";
-import { useDarkModeContext } from "../../utils/darkMode";
+import { useDarkModeContext } from "../../utils/hooks/useDarkMode";
 
 export const Home: React.FC = () => {
   const { takePhoto } = usePhotoGallery();

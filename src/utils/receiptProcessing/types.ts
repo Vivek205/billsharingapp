@@ -13,12 +13,30 @@ export type ReceiptProcessingContextType = {
   setImageJsonString: (imageJsonString: string) => void;
 };
 
+type ReceiptItemType =
+  | "room"
+  | "tax"
+  | "parking"
+  | "service"
+  | "fee"
+  | "delivery"
+  | "product"
+  | "food"
+  | "alcohol"
+  | "tobacco"
+  | "transportation"
+  | "fuel"
+  | "refund"
+  | "discount"
+  | "payment"
+  | "giftcard";
+
 export type ParsedReceiptItem = {
   name: string;
-  price: string;
-  quantity: string;
+  price: number | null;
+  quantity: number;
+  total: number;
+  type: ReceiptItemType;
 };
 
-export type ParsedReceipt = {
-  items: ParsedReceiptItem[];
-};
+export type ParsedReceipt = ParsedReceiptItem[];

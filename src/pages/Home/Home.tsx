@@ -14,6 +14,8 @@ import {
   IonMenu,
   IonMenuButton,
   IonPage,
+  IonSegment,
+  IonSegmentButton,
   IonSkeletonText,
   IonText,
   IonTitle,
@@ -21,7 +23,7 @@ import {
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
-import { camera, logOut } from "ionicons/icons";
+import { camera, cardOutline, logOutOutline } from "ionicons/icons";
 import { usePhotoGallery } from "../../utils/hooks/usePhotoGallery";
 import {
   convertUriToBase64,
@@ -35,6 +37,7 @@ import "./Home.css";
 import { UseAppToast } from "../../utils/hooks/useAppToast";
 import { useEffect, useState } from "react";
 import {
+  getBankDetails,
   getReceiptsByIds,
   getUserReceipts,
   Receipt,
@@ -54,6 +57,7 @@ export const Home: React.FC = () => {
   const [userReceipts, setUserReceipts] = useState<Receipt[]>([]);
   const [fetchingUserReceipts, setFetchingUserReceipts] = useState(false);
   const { isDarkModeEnabled, toggleDarkMode } = useDarkModeContext();
+  const [showAddBankDetails, setShowAddBankDetails] = useState(false);
 
   const getUserReceiptDetails = async (userId: string) => {
     try {
@@ -62,15 +66,24 @@ export const Home: React.FC = () => {
       console.log("receipt ids", receiptIds);
       if (!receiptIds) return;
       const receipts = await getReceiptsByIds(receiptIds);
-      setUserReceipts(receipts);
+      // TODO: Check if the array could be <(Receipt|null)[]>
+      setUserReceipts(receipts as Receipt[]);
     } finally {
       setFetchingUserReceipts(false);
+    }
+  };
+
+  const fetchUserBankDetails = async (userId: string) => {
+    const bankDetails = await getBankDetails(userId);
+    if (!bankDetails?.accountName) {
+      setShowAddBankDetails(true);
     }
   };
 
   useEffect(() => {
     if (user?.uid) {
       getUserReceiptDetails(user.uid);
+      fetchUserBankDetails(user.uid);
     }
   }, [user?.uid]);
 
@@ -101,13 +114,6 @@ export const Home: React.FC = () => {
       console.log("error in capture", error);
       present("Unable to pick image. Please check the camera permissions");
     }
-
-    // try {
-    //   await transformImageToText(receiptImage.base64String);
-    //   console.log("image transformed");
-    // } catch (error) {
-    //   console.log("error for image processing", error);
-    // }
   };
 
   const handleLogout = async () => {
@@ -143,8 +149,12 @@ export const Home: React.FC = () => {
                 Dark Mode
               </IonToggle>
             </IonItem>
-            <IonItem onClick={handleLogout}>
-              <IonIcon icon={logOut} slot="start" />
+            <IonItem routerDirection="forward" routerLink={Routes.BankDetails}>
+              <IonIcon icon={cardOutline} slot="start" />
+              <IonLabel>Bank Details</IonLabel>
+            </IonItem>
+            <IonItem detail onClick={handleLogout}>
+              <IonIcon icon={logOutOutline} slot="start" />
               <IonLabel>Logout</IonLabel>
             </IonItem>
           </IonList>
@@ -160,16 +170,26 @@ export const Home: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <IonContent className="ion-padding">
-          <IonCard>
-            <IonCardContent>
-              <IonText>
-                <p>Enter your bank details to start receiving payments</p>
-              </IonText>
-              <IonButton fill="clear" onClick={redirectToBankDetails}>
-                Add
-              </IonButton>
-            </IonCardContent>
-          </IonCard>
+          <IonSegment>
+            <IonSegmentButton>
+              <IonLabel>Created</IonLabel>
+            </IonSegmentButton>
+            <IonSegmentButton>
+              <IonLabel>Received</IonLabel>
+            </IonSegmentButton>
+          </IonSegment>
+          {showAddBankDetails && (
+            <IonCard>
+              <IonCardContent>
+                <IonText>
+                  <p>Enter your bank details to start receiving payments</p>
+                </IonText>
+                <IonButton fill="clear" onClick={redirectToBankDetails}>
+                  Add
+                </IonButton>
+              </IonCardContent>
+            </IonCard>
+          )}
           <IonList className="ion-margin-top">
             {fetchingUserReceipts &&
               [1, 2, 3].map((item) => (

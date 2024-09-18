@@ -58,6 +58,8 @@ export const ItemsReview: React.FC = () => {
     return result;
   }, [imageJsonString]);
 
+  console.log("parsedJson", parsedJson);
+
   return (
     <IonPage>
       <IonHeader>
@@ -76,14 +78,14 @@ export const ItemsReview: React.FC = () => {
           <IonList>
             <IonItem color="medium">
               <IonLabel>Name</IonLabel>
-              <IonLabel>Price</IonLabel>
               <IonLabel>Quantity</IonLabel>
+              <IonLabel>Price</IonLabel>
             </IonItem>
-            {parsedJson?.items?.map((item) => (
+            {parsedJson?.map((item) => (
               <IonItem key={item.name}>
                 <IonLabel>{item.name}</IonLabel>
-                <IonLabel>{parseFloat(item.price).toFixed(2)}</IonLabel>
                 <IonLabel>{item.quantity}</IonLabel>
+                <IonLabel>{item.total}</IonLabel>
               </IonItem>
             ))}
           </IonList>

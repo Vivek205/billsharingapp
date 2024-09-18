@@ -4,5 +4,5 @@ export type UserDetails = {
   email: string | null;
   displayName: string | null;
   photoURL?: string | null;
-  receiptIds: string[];
+  receiptIds?: string[];
 };

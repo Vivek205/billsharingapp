@@ -54,8 +54,6 @@ export const ReceiptDetails: FC<ReceiptDetailsProps> = ({ match }) => {
   };
 
   useEffect(() => {
-    console.log("receiptId", receiptId);
-    console.log("match", match);
     if (match.params.receiptId) {
       fetchReceiptDetails();
     }
@@ -71,7 +69,6 @@ export const ReceiptDetails: FC<ReceiptDetailsProps> = ({ match }) => {
 
   const handleConfirm = async () => {
     try {
-      console.log("handle confirm", receiptId);
       if (!receiptId) return;
       await updateReceipt(receiptId as string, { isConfirmed: true });
       await fetchReceiptDetails();
@@ -99,6 +96,8 @@ export const ReceiptDetails: FC<ReceiptDetailsProps> = ({ match }) => {
       present(`Error sharing the receipt ${error.message}`);
     }
   };
+
+  console.log("receipt", receipt);
   return (
     <IonPage>
       <IonHeader>
@@ -128,18 +127,17 @@ export const ReceiptDetails: FC<ReceiptDetailsProps> = ({ match }) => {
               <IonList>
                 <IonItem color="medium">
                   <IonLabel>Name</IonLabel>
-                  <IonLabel>Price</IonLabel>
                   <IonLabel>Quantity</IonLabel>
+                  <IonLabel>Price</IonLabel>
                 </IonItem>
-                {(JSON.parse(receipt.jsonData) as ParsedReceipt).items.map(
-                  (item) => (
-                    <IonItem key={item.name}>
-                      <IonLabel>{item.name}</IonLabel>
-                      <IonLabel>{parseFloat(item.price).toFixed(2)}</IonLabel>
-                      <IonLabel>{item.quantity}</IonLabel>
-                    </IonItem>
-                  )
-                )}
+                {(JSON.parse(receipt.jsonData) as ParsedReceipt).map((item) => (
+                  <IonItem key={item.name}>
+                    <IonLabel>{item.name}</IonLabel>
+
+                    <IonLabel>{item.quantity}</IonLabel>
+                    <IonLabel>{item.total}</IonLabel>
+                  </IonItem>
+                ))}
               </IonList>
             )}
           </IonCardContent>

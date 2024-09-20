@@ -20,8 +20,10 @@ import { useReceiptProcessingContext } from "../../utils/receiptProcessing";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SharePaymentLinkFormInputs } from "./types";
 import { SHARE_PAYMENT_LINK_PAGE_FORM_ID } from "./constants";
+import { useFirebaseContext } from "../../utils/auth/firebase";
 
 export const SharePaymentLink: FC = () => {
+  const { user } = useFirebaseContext();
   const { receiptId } = useReceiptProcessingContext();
   const { share } = useNativeShare();
   const { register, handleSubmit } = useForm<SharePaymentLinkFormInputs>({
@@ -39,13 +41,16 @@ export const SharePaymentLink: FC = () => {
       if (receiptId) {
         await updateReceipt(receiptId, { title: receiptTitle });
       }
+      // TODO: Diplay error if the user is not logged in - if needed; or remove the TODO
+      if (!user || !user?.uid) return;
+      const url = `import.meta.env.VITE_PAYMENT_PAGE/${user.uid}/${receiptId}`;
       await share({
         title: receiptTitle,
         text: `Hey! I've shared a payment link with you. 
         You can select the items intended for you and complete your payment. 
         Hurry, it's valid until ${validTill.toLocaleDateString()}! 
-        Check it out: https://www.google.com`,
-        url: "https://www.google.com",
+        Check it out: ${url}`,
+        url,
       });
     } catch (error) {
       console.log("error in share", error);

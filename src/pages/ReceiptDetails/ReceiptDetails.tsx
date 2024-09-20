@@ -36,8 +36,10 @@ import { checkmarkOutline, shareOutline, trash } from "ionicons/icons";
 import { useParams } from "react-router-dom";
 import { UseAppToast } from "../../utils/hooks/useAppToast";
 import { useNativeShare } from "../../utils/hooks/useNativeShare";
+import { useFirebaseContext } from "../../utils/auth/firebase";
 
 export const ReceiptDetails: FC<ReceiptDetailsProps> = ({ match }) => {
+  const { user } = useFirebaseContext();
   const params = useParams<ReceiptDetailsUrlParams>();
 
   const { receiptId } = params;
@@ -84,13 +86,17 @@ export const ReceiptDetails: FC<ReceiptDetailsProps> = ({ match }) => {
     validTill.setDate(validTill.getDate() + 7);
     try {
       if (!receiptId) return;
+      // TODO: Diplay error if the user is not logged in - if needed; or remove the TODO
+      if (!user || !user?.uid) return;
+      const url = `import.meta.env.VITE_PAYMENT_PAGE/${user.uid}/${receiptId}`;
+
       await share({
         title: receipt?.title,
         text: `Hey! I've shared a payment link with you. 
         You can select the items intended for you and complete your payment. 
         Hurry, it's valid until ${validTill.toLocaleDateString()}! 
-        Check it out: https://www.google.com`,
-        url: "https://www.google.com",
+         Check it out: ${url}`,
+        url,
       });
     } catch (error) {
       present(`Error sharing the receipt ${error.message}`);

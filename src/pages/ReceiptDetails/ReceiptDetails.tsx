@@ -88,7 +88,7 @@ export const ReceiptDetails: FC<ReceiptDetailsProps> = ({ match }) => {
       if (!receiptId) return;
       // TODO: Diplay error if the user is not logged in - if needed; or remove the TODO
       if (!user || !user?.uid) return;
-      const url = `import.meta.env.VITE_PAYMENT_PAGE/${user.uid}/${receiptId}`;
+      const url = `${import.meta.env.VITE_PAYMENT_PAGE}/${user.uid}/${receiptId}`;
 
       await share({
         title: receipt?.title,

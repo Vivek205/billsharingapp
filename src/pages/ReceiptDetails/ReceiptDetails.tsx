@@ -88,14 +88,16 @@ export const ReceiptDetails: FC<ReceiptDetailsProps> = ({ match }) => {
       if (!receiptId) return;
       // TODO: Diplay error if the user is not logged in - if needed; or remove the TODO
       if (!user || !user?.uid) return;
-      const url = `${import.meta.env.VITE_PAYMENT_PAGE}/${user.uid}/${receiptId}`;
+      const url = `${import.meta.env.VITE_PAYMENT_PAGE}/${
+        user.uid
+      }/${receiptId}`;
 
       await share({
         title: receipt?.title,
         text: `Hey! I've shared a payment link with you. 
         You can select the items intended for you and complete your payment. 
         Hurry, it's valid until ${validTill.toLocaleDateString()}! 
-         Check it out: ${url}`,
+         Check it out: \n`,
         url,
       });
     } catch (error) {
